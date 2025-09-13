@@ -221,21 +221,16 @@ class ResourceController extends Controller
         $templatePath = public_path('forms/soa/' . $templateName . '.docx');
 
         if (File::exists($templatePath)) {
-            // Use Microsoft Office Online viewer to display the original DOCX file
-            $fileUrl = urlencode(asset('forms/soa/' . $templateName . '.docx'));
-            $officeViewerUrl = "https://view.officeapps.live.com/op/embed.aspx?src=" . $fileUrl;
-
             return view('resources.soa-preview', [
                 'templateName' => $templateName,
                 'templatePath' => $templatePath,
-                'fileUrl' => $fileUrl,
-                'officeViewerUrl' => $officeViewerUrl,
                 'originalFileUrl' => asset('forms/soa/' . $templateName . '.docx')
             ]);
         }
 
         return redirect()->back()->with('error', 'Template not found. Please place the file in public/forms/soa/ directory.');
     }
+
 
 
     /**

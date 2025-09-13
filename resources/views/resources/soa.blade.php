@@ -24,10 +24,6 @@
 
                 <!-- SOA Forms Content -->
                 <div class="p-6">
-                    <div class="mb-6">
-                        <h3 class="text-lg font-medium text-gray-900 mb-2">SOA Form Templates</h3>
-                        <p class="text-sm text-gray-600">Access and manage your SOA form templates. Place your .docx files in the <code class="bg-gray-100 px-2 py-1 rounded text-xs">public/forms/soa/</code> directory.</p>
-                    </div>
 
                     <!-- Template Categories -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -43,10 +39,7 @@
                                     <div class="flex justify-between items-center py-2">
                                         <span class="text-sm text-gray-600">Members & Officers Info Sheet</span>
                                         <div class="flex space-x-2">
-                                            <button onclick="previewTemplate('MEMBERS_OFFICERS_INFOSHEET 2025')" class="text-gray-500 hover:text-gray-700 text-sm">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <button onclick="downloadTemplate('MEMBERS_OFFICERS_INFOSHEET 2025')" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                                            <button onclick="downloadTemplate('MEMBERS_OFFICERS_INFOSHEET 2025')" class="resource-btn" style="max-width: 120px; padding: 8px 12px; font-size: 12px; background: linear-gradient(135deg, #28a745 0%, #20c997 100%);">
                                                 <i class="fas fa-download mr-1"></i>Download
                                             </button>
                                         </div>
@@ -54,10 +47,7 @@
                                     <div class="flex justify-between items-center py-2">
                                         <span class="text-sm text-gray-600">Adviser Info Sheet</span>
                                         <div class="flex space-x-2">
-                                            <button onclick="previewTemplate('ADVISER_INFOSHEET')" class="text-gray-500 hover:text-gray-700 text-sm">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <button onclick="downloadTemplate('ADVISER_INFOSHEET')" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                                            <button onclick="downloadTemplate('ADVISER_INFOSHEET')" class="resource-btn" style="max-width: 120px; padding: 8px 12px; font-size: 12px; background: linear-gradient(135deg, #28a745 0%, #20c997 100%);">
                                                 <i class="fas fa-download mr-1"></i>Download
                                             </button>
                                         </div>
@@ -65,16 +55,13 @@
                                     <div class="flex justify-between items-center py-2">
                                         <span class="text-sm text-gray-600">Cover Sheet for Organizations</span>
                                         <div class="flex space-x-2">
-                                            <button onclick="previewTemplate('COVER-SHEET-FOR-NEW-AND-OLD-ORGANIZATIONS')" class="text-gray-500 hover:text-gray-700 text-sm">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <button onclick="downloadTemplate('COVER-SHEET-FOR-NEW-AND-OLD-ORGANIZATIONS')" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                                            <button onclick="downloadTemplate('COVER-SHEET-FOR-NEW-AND-OLD-ORGANIZATIONS')" class="resource-btn" style="max-width: 120px; padding: 8px 12px; font-size: 12px; background: linear-gradient(135deg, #28a745 0%, #20c997 100%);">
                                                 <i class="fas fa-download mr-1"></i>Download
                                             </button>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                    </div>
 
                             <!-- Activity Forms -->
                             <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
@@ -88,10 +75,7 @@
                                     <div class="flex justify-between items-center py-2">
                                         <span class="text-sm text-gray-600">Calendar of Activities</span>
                                         <div class="flex space-x-2">
-                                            <button onclick="previewTemplate('CALENDAR-OF-ACTIVITIES FINAL2025')" class="text-gray-500 hover:text-gray-700 text-sm">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <button onclick="downloadTemplate('CALENDAR-OF-ACTIVITIES FINAL2025')" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                                            <button onclick="downloadTemplate('CALENDAR-OF-ACTIVITIES FINAL2025')" class="resource-btn" style="max-width: 120px; padding: 8px 12px; font-size: 12px; background: linear-gradient(135deg, #28a745 0%, #20c997 100%);">
                                                 <i class="fas fa-download mr-1"></i>Download
                                             </button>
                                         </div>
@@ -99,10 +83,7 @@
                                     <div class="flex justify-between items-center py-2">
                                         <span class="text-sm text-gray-600">Activity Application (On-campus)</span>
                                         <div class="flex space-x-2">
-                                            <button onclick="previewTemplate('APPLI_INCAMPUS_2025')" class="text-gray-500 hover:text-gray-700 text-sm">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <button onclick="downloadTemplate('APPLI_INCAMPUS_2025')" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                                            <button onclick="downloadTemplate('APPLI_INCAMPUS_2025')" class="resource-btn" style="max-width: 120px; padding: 8px 12px; font-size: 12px; background: linear-gradient(135deg, #28a745 0%, #20c997 100%);">
                                                 <i class="fas fa-download mr-1"></i>Download
                                             </button>
                                         </div>
@@ -110,16 +91,13 @@
                                     <div class="flex justify-between items-center py-2">
                                         <span class="text-sm text-gray-600">Activity Application (Off-campus)</span>
                                         <div class="flex space-x-2">
-                                            <button onclick="previewTemplate('APPLI_OFFCAMPUS_2025')" class="text-gray-500 hover:text-gray-700 text-sm">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <button onclick="downloadTemplate('APPLI_OFFCAMPUS_2025')" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                                            <button onclick="downloadTemplate('APPLI_OFFCAMPUS_2025')" class="resource-btn" style="max-width: 120px; padding: 8px 12px; font-size: 12px; background: linear-gradient(135deg, #28a745 0%, #20c997 100%);">
                                                 <i class="fas fa-download mr-1"></i>Download
                                             </button>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                    </div>
 
                             <!-- Documentation Forms -->
                             <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
@@ -133,10 +111,7 @@
                                     <div class="flex justify-between items-center py-2">
                                         <span class="text-sm text-gray-600">Waiver Form</span>
                                         <div class="flex space-x-2">
-                                            <button onclick="previewTemplate('WAIVER')" class="text-gray-500 hover:text-gray-700 text-sm">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <button onclick="downloadTemplate('WAIVER')" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                                            <button onclick="downloadTemplate('WAIVER')" class="resource-btn" style="max-width: 120px; padding: 8px 12px; font-size: 12px; background: linear-gradient(135deg, #28a745 0%, #20c997 100%);">
                                                 <i class="fas fa-download mr-1"></i>Download
                                             </button>
                                         </div>
@@ -144,10 +119,7 @@
                                     <div class="flex justify-between items-center py-2">
                                         <span class="text-sm text-gray-600">Narrative Format</span>
                                         <div class="flex space-x-2">
-                                            <button onclick="previewTemplate('FORMAT_NARRATIVE')" class="text-gray-500 hover:text-gray-700 text-sm">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <button onclick="downloadTemplate('FORMAT_NARRATIVE')" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                                            <button onclick="downloadTemplate('FORMAT_NARRATIVE')" class="resource-btn" style="max-width: 120px; padding: 8px 12px; font-size: 12px; background: linear-gradient(135deg, #28a745 0%, #20c997 100%);">
                                                 <i class="fas fa-download mr-1"></i>Download
                                             </button>
                                         </div>
@@ -155,10 +127,7 @@
                                     <div class="flex justify-between items-center py-2">
                                         <span class="text-sm text-gray-600">Members Certification</span>
                                         <div class="flex space-x-2">
-                                            <button onclick="previewTemplate('LIST OF MEMBERS CERTIFY BY ORG ADVISER')" class="text-gray-500 hover:text-gray-700 text-sm">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <button onclick="downloadTemplate('LIST OF MEMBERS CERTIFY BY ORG ADVISER')" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                                            <button onclick="downloadTemplate('LIST OF MEMBERS CERTIFY BY ORG ADVISER')" class="resource-btn" style="max-width: 120px; padding: 8px 12px; font-size: 12px; background: linear-gradient(135deg, #28a745 0%, #20c997 100%);">
                                                 <i class="fas fa-download mr-1"></i>Download
                                             </button>
                                         </div>
@@ -172,11 +141,6 @@
     </div>
 
     <script>
-        function previewTemplate(templateName) {
-            // Preview template functionality - opens in new window
-            const previewUrl = `{{ route('resources.soa.template.preview') }}?template=${templateName}`;
-            window.open(previewUrl, '_blank', 'width=800,height=600,scrollbars=yes,resizable=yes');
-        }
 
 
         function downloadTemplate(templateName) {

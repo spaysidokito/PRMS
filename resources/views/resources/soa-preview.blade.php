@@ -17,17 +17,17 @@
                         </div>
                         <div class="flex space-x-3">
                             <a href="{{ $originalFileUrl }}" target="_blank"
-                               class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                               class="resource-btn" style="max-width: 160px; padding: 10px 16px; font-size: 13px;">
                                 <i class="fas fa-external-link-alt mr-2"></i>
                                 Open in New Tab
                             </a>
                             <a href="{{ route('resources.soa.template.download', ['template' => $templateName]) }}"
-                               class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 focus:bg-green-700 active:bg-green-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                               class="resource-btn" style="max-width: 140px; padding: 10px 16px; font-size: 13px; background: linear-gradient(135deg, #28a745 0%, #20c997 100%);">
                                 <i class="fas fa-download mr-2"></i>
                                 Download
                             </a>
                             <button onclick="copyFileUrl()"
-                                    class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                    class="resource-btn" style="max-width: 140px; padding: 10px 16px; font-size: 13px; background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);">
                                 <i class="fas fa-copy mr-2"></i>
                                 Copy URL
                             </button>
@@ -38,78 +38,101 @@
                     <div class="border border-gray-300 rounded-lg overflow-hidden">
                         <div class="bg-gray-50 px-4 py-2 border-b border-gray-300">
                             <div class="flex items-center justify-between">
-                                <span class="text-sm font-medium text-gray-700">Document Preview</span>
+                                <span class="text-sm font-medium text-gray-700">Document Information</span>
                                 <div class="flex items-center space-x-2">
-                                    <span class="text-xs text-gray-500">Powered by Microsoft Office Online</span>
+                                    <span class="text-xs text-gray-500">DOCX Document</span>
                                     <div class="w-2 h-2 bg-green-500 rounded-full"></div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Office Online Viewer -->
-                        <div class="relative" style="height: 80vh;">
-                            <iframe
-                                src="{{ $officeViewerUrl }}"
-                                width="100%"
-                                height="100%"
-                                frameborder="0"
-                                class="border-0"
-                                id="officeViewer">
-                            </iframe>
+                        <!-- Document Info and Preview -->
+                        <div class="p-6">
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                <!-- Document Details -->
+                                <div class="space-y-4">
+                                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                        <h3 class="text-lg font-semibold text-blue-900 mb-3">Document Details</h3>
+                                        <div class="space-y-2">
+                                            <div class="flex justify-between">
+                                                <span class="text-sm text-blue-700">File Name:</span>
+                                                <span class="text-sm font-medium text-blue-900">{{ $templateName }}.docx</span>
+                                            </div>
+                                            <div class="flex justify-between">
+                                                <span class="text-sm text-blue-700">File Type:</span>
+                                                <span class="text-sm font-medium text-blue-900">Microsoft Word Document</span>
+                                            </div>
+                                            <div class="flex justify-between">
+                                                <span class="text-sm text-blue-700">File Size:</span>
+                                                <span class="text-sm font-medium text-blue-900">{{ number_format(filesize($templatePath) / 1024, 1) }} KB</span>
+                                            </div>
+                                            <div class="flex justify-between">
+                                                <span class="text-sm text-blue-700">Last Modified:</span>
+                                                <span class="text-sm font-medium text-blue-900">{{ date('M j, Y g:i A', filemtime($templatePath)) }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
 
-                            <!-- Loading indicator -->
-                            <div id="loadingIndicator" class="absolute inset-0 bg-white bg-opacity-90 flex items-center justify-center">
-                                <div class="text-center">
-                                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-                                    <p class="text-gray-600">Loading document preview...</p>
+                                    <!-- Quick Actions -->
+                                    <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                                        <h3 class="text-lg font-semibold text-green-900 mb-3">Quick Actions</h3>
+                                        <div class="space-y-3">
+                                            <a href="{{ $originalFileUrl }}" target="_blank"
+                                               class="w-full resource-btn flex items-center justify-center" style="max-width: none; padding: 12px 20px;">
+                                                <i class="fas fa-external-link-alt mr-2"></i>
+                                                Open in New Tab
+                                            </a>
+                                            <a href="{{ route('resources.soa.template.download', ['template' => $templateName]) }}"
+                                               class="w-full resource-btn flex items-center justify-center" style="max-width: none; padding: 12px 20px; background: linear-gradient(135deg, #28a745 0%, #20c997 100%);">
+                                                <i class="fas fa-download mr-2"></i>
+                                                Download Document
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Document Preview Placeholder -->
+                                <div class="space-y-4">
+                                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-6 text-center">
+                                        <div class="mb-4">
+                                            <i class="fas fa-file-word text-6xl text-blue-600"></i>
+                                        </div>
+                                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Microsoft Word Document</h3>
+                                        <p class="text-gray-600 mb-4">This is a DOCX file that can be opened with Microsoft Word or compatible applications.</p>
+
+                                        <!-- File Preview Info -->
+                                        <div class="bg-white border border-gray-200 rounded-lg p-4 text-left">
+                                            <h4 class="font-medium text-gray-900 mb-2">Preview Options:</h4>
+                                            <ul class="text-sm text-gray-600 space-y-1">
+                                                <li>• Click "Open in New Tab" to view in browser</li>
+                                                <li>• Click "Download Document" to save locally</li>
+                                                <li>• Use Microsoft Word or LibreOffice to open</li>
+                                                <li>• Compatible with Google Docs online</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <!-- Alternative Viewers -->
+                                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                                        <h3 class="text-lg font-semibold text-yellow-900 mb-3">Alternative Viewers</h3>
+                                        <div class="space-y-2 text-sm text-yellow-800">
+                                            <p>• <strong>Google Docs:</strong> Upload to Google Drive and open with Google Docs</p>
+                                            <p>• <strong>Microsoft Word Online:</strong> Upload to OneDrive and open online</p>
+                                            <p>• <strong>LibreOffice:</strong> Free alternative to Microsoft Word</p>
+                                            <p>• <strong>Browser:</strong> Some browsers can display DOCX files directly</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Alternative viewing options -->
-                    <div class="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                        <h3 class="text-sm font-medium text-yellow-800 mb-2">Having trouble viewing the document?</h3>
-                        <div class="flex flex-wrap gap-3">
-                            <a href="{{ $originalFileUrl }}" target="_blank"
-                               class="inline-flex items-center text-sm text-yellow-700 hover:text-yellow-900 underline">
-                                <i class="fas fa-external-link-alt mr-1"></i>
-                                Open in New Tab
-                            </a>
-                            <a href="{{ route('resources.soa.template.download', ['template' => $templateName]) }}"
-                               class="inline-flex items-center text-sm text-yellow-700 hover:text-yellow-900 underline">
-                                <i class="fas fa-download mr-1"></i>
-                                Download File
-                            </a>
-                            <button onclick="copyFileUrl()"
-                                    class="inline-flex items-center text-sm text-yellow-700 hover:text-yellow-900 underline">
-                                <i class="fas fa-copy mr-1"></i>
-                                Copy File URL
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Instructions -->
-                    <div class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                        <h3 class="text-sm font-medium text-blue-800 mb-2">Preview Instructions:</h3>
-                        <ul class="text-sm text-blue-700 space-y-1">
-                            <li>• The document is displayed using Microsoft Office Online viewer</li>
-                            <li>• You can scroll, zoom, and navigate through the document</li>
-                            <li>• This is a read-only preview of the original DOCX file</li>
-                            <li>• Use the download button to get a copy of the file</li>
-                        </ul>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Hide loading indicator when iframe loads
-        document.getElementById('officeViewer').onload = function() {
-            document.getElementById('loadingIndicator').style.display = 'none';
-        };
-
         // Copy file URL to clipboard
         function copyFileUrl() {
             const fileUrl = '{{ $originalFileUrl }}';
@@ -143,27 +166,5 @@
                 notification.remove();
             }, 3000);
         }
-
-        // Handle iframe load errors
-        document.getElementById('officeViewer').onerror = function() {
-            document.getElementById('loadingIndicator').innerHTML = `
-                <div class="text-center">
-                    <i class="fas fa-exclamation-triangle text-yellow-500 text-4xl mb-4"></i>
-                    <p class="text-gray-600 mb-4">Unable to load document preview</p>
-                    <div class="space-x-3">
-                        <a href="{{ $originalFileUrl }}" target="_blank"
-                           class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                            <i class="fas fa-external-link-alt mr-2"></i>
-                            Open in New Tab
-                        </a>
-                        <a href="{{ route('resources.soa.template.download', ['template' => $templateName]) }}"
-                           class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
-                            <i class="fas fa-download mr-2"></i>
-                            Download File
-                        </a>
-                    </div>
-                </div>
-            `;
-        };
     </script>
 </x-app-layout>
