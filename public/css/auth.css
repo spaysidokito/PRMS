@@ -1,0 +1,440 @@
+/* Auth Pages Styles */
+body {
+    background-color: #FFFFFF;
+    font-family: 'Nunito', sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.auth-container {
+    display: flex;
+    width: 1000px;
+    min-height: 700px;
+    /* max-height: 90vh; */
+    background: #FFFFFF;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    overflow: visible;
+}
+
+.auth-sidebar {
+    flex: 1;
+    background: linear-gradient(135deg, #E6F5E9 0%, #d1e7dd 100%);
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border-radius: 20px 0 0 20px;
+}
+
+.auth-logo {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 20px;
+    border-radius: 50%;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.auth-sidebar h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #5E8C7F;
+    margin-bottom: 15px;
+    line-height: 1.2;
+}
+
+.auth-sidebar p {
+    font-size: 16px;
+    color: #6c757d;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+/* Features Section */
+.auth-features {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.feature-item:hover {
+    background: rgba(255, 255, 255, 0.9);
+    transform: translateX(5px);
+}
+
+.feature-item i {
+    font-size: 18px;
+    color: #5E8C7F;
+    width: 20px;
+    text-align: center;
+}
+
+.feature-item span {
+    font-size: 14px;
+    font-weight: 500;
+    color: #5E8C7F;
+}
+
+.auth-main {
+    flex: 1;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    background: #FFFFFF;
+    border-radius: 0 20px 20px 0;
+    /* overflow-y: auto; */
+}
+
+.auth-main h2 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #343a40;
+    margin-bottom: 30px;
+    text-align: center;
+    margin-top: 0;
+}
+
+.auth-subtitle {
+    font-size: 16px;
+    color: #6c757d;
+    text-align: center;
+    margin-bottom: 40px;
+    line-height: 1.5;
+}
+
+/* Auth Switch Section */
+.auth-switch {
+    text-align: center;
+    margin-bottom: 25px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    border: 2px solid #e9ecef;
+}
+
+.auth-switch p {
+    margin: 0;
+    font-size: 14px;
+    color: #495057;
+    font-weight: 500;
+}
+
+.auth-switch .auth-links {
+    color: #5E8C7F;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.auth-switch .auth-links:hover {
+    color: #4a7c6f;
+    text-decoration: underline;
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #495057;
+    margin-bottom: 8px;
+}
+
+/* Input Wrapper Styles */
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.input-icon {
+    position: absolute;
+    left: 15px;
+    color: #6c757d;
+    font-size: 16px;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.input-wrapper input {
+    width: 100%;
+    padding: 15px 15px 15px 45px;
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+    box-sizing: border-box;
+}
+
+.input-wrapper input:focus {
+    outline: none;
+    border-color: #5E8C7F;
+    background: #FFFFFF;
+    box-shadow: 0 0 0 3px rgba(94, 140, 127, 0.1);
+}
+
+/* Special padding for password inputs to accommodate the toggle button */
+.input-wrapper input[type="password"] {
+    padding-right: 50px;
+}
+
+/* Password Toggle Button */
+.password-toggle {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #6c757d;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 30px;
+    min-height: 30px;
+}
+
+.password-toggle:hover {
+    color: #5E8C7F;
+    background: rgba(94, 140, 127, 0.1);
+}
+
+.password-toggle:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(94, 140, 127, 0.2);
+}
+
+.password-toggle i {
+    font-size: 16px;
+    pointer-events: none;
+}
+
+/* Password Strength Indicator */
+.password-strength {
+    margin-top: 10px;
+}
+
+.strength-bar {
+    width: 100%;
+    height: 4px;
+    background: #e9ecef;
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+
+.strength-fill {
+    height: 100%;
+    width: 0%;
+    transition: all 0.3s ease;
+    border-radius: 2px;
+}
+
+.strength-text {
+    font-size: 12px;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+/* Checkbox Wrapper */
+.checkbox-wrapper {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    border: 2px solid #e9ecef;
+}
+
+.checkbox-wrapper input[type="checkbox"] {
+    margin: 0;
+    width: 18px;
+    height: 18px;
+    accent-color: #5E8C7F;
+}
+
+.checkbox-wrapper label {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #495057;
+}
+
+.login-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.remember-me input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: #5E8C7F;
+}
+
+.remember-me label {
+    font-size: 14px;
+    color: #495057;
+    margin: 0;
+}
+
+.auth-submit-btn {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, #5E8C7F 0%, #4a7c6f 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 30px;
+    margin-top: 10px;
+}
+
+.auth-submit-btn:hover {
+    background: linear-gradient(135deg, #4a7c6f 0%, #3a6b5f 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(94, 140, 127, 0.3);
+}
+
+.auth-submit-btn:active {
+    transform: translateY(0);
+}
+
+.auth-submit-btn i {
+    font-size: 16px;
+}
+
+.auth-footer {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.auth-footer p {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #6c757d;
+}
+
+.auth-note {
+    font-size: 12px !important;
+    color: #adb5bd !important;
+    margin-top: 10px !important;
+}
+
+.auth-links {
+    color: #5E8C7F;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.auth-links:hover {
+    color: #4a7c6f;
+    text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .auth-container {
+        width: 95%;
+        height: auto;
+        min-height: 100vh;
+        flex-direction: column;
+        border-radius: 0;
+    }
+
+    .auth-sidebar {
+        padding: 30px 20px;
+        border-radius: 0;
+    }
+
+    .auth-main {
+        padding: 30px 20px;
+        border-radius: 0;
+    }
+
+    .auth-features {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .feature-item {
+        flex: 1;
+        min-width: 150px;
+    }
+}
+
+@media (max-width: 480px) {
+    .auth-container {
+        width: 100%;
+        height: 100vh;
+        border-radius: 0;
+    }
+
+    .auth-sidebar {
+        padding: 20px;
+    }
+
+    .auth-main {
+        padding: 20px;
+    }
+
+    .auth-main h2 {
+        font-size: 24px;
+    }
+
+    .auth-sidebar h1 {
+        font-size: 22px;
+    }
+
+    .feature-item {
+        min-width: 120px;
+        font-size: 12px;
+    }
+}
