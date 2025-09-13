@@ -35,7 +35,15 @@ Route::middleware([
         Route::post('/gtc/store', [App\Http\Controllers\ResourceController::class, 'gtcStore'])->name('gtc.store');
         Route::post('/pod/store', [App\Http\Controllers\ResourceController::class, 'podStore'])->name('pod.store');
 
-        Route::get('/soa/download', [App\Http\Controllers\ResourceController::class, 'soaDownload'])->name('soa.download');
+        // SOA Form Upload and Download Routes
+        Route::post('/soa/upload', [App\Http\Controllers\ResourceController::class, 'soaUpload'])->name('soa.upload');
+        Route::get('/soa/download', [App\Http\Controllers\ResourceController::class, 'soaDownloadFile'])->name('soa.download');
+        Route::get('/soa/preview', [App\Http\Controllers\ResourceController::class, 'soaPreview'])->name('soa.preview');
+
+        // SOA Template Routes
+        Route::get('/soa/template/preview', [App\Http\Controllers\ResourceController::class, 'soaTemplatePreview'])->name('soa.template.preview');
+        Route::get('/soa/template/download', [App\Http\Controllers\ResourceController::class, 'soaTemplateDownload'])->name('soa.template.download');
+
         Route::get('/gtc/download', [App\Http\Controllers\ResourceController::class, 'gtcDownload'])->name('gtc.download');
         Route::get('/pod/download', [App\Http\Controllers\ResourceController::class, 'podDownload'])->name('pod.download');
 

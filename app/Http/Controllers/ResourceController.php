@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 
 class ResourceController extends Controller
 {
@@ -112,5 +114,144 @@ class ResourceController extends Controller
         // TODO: Implement print view when forms are provided
         return view('resources.print.pod');
     }
+
+    /**
+     * Upload SOA forms
+     */
+    public function soaUpload(Request $request)
+    {
+        $request->validate([
+            'forms.*' => 'required|file|mimes:doc,docx|max:10240', // 10MB max per file
+        ]);
+
+        $uploadedFiles = [];
+        $uploadPath = 'forms/soa/uploads';
+
+        if ($request->hasFile('forms')) {
+            foreach ($request->file('forms') as $file) {
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $file->storeAs($uploadPath, $filename, 'public');
+                $uploadedFiles[] = $filename;
+            }
+        }
+
+        return redirect()->route('resources.soa')->with('success',
+            count($uploadedFiles) . ' form(s) uploaded successfully!');
+    }
+
+    /**
+     * Download specific SOA form
+     */
+    public function soaDownloadFile(Request $request)
+    {
+        $filename = $request->get('file');
+        $filePath = 'forms/soa/uploads/' . $filename;
+
+        if (Storage::disk('public')->exists($filePath)) {
+            return response()->download(storage_path('app/public/' . $filePath));
+        }
+
+        return redirect()->back()->with('error', 'File not found.');
+    }
+
+    /**
+     * Get uploaded forms list
+     */
+    private function getUploadedForms()
+    {
+        $forms = [];
+        $uploadPath = storage_path('app/public/forms/soa/uploads');
+
+        if (File::exists($uploadPath)) {
+            $files = File::files($uploadPath);
+
+            foreach ($files as $file) {
+                $forms[] = [
+                    'filename' => $file->getFilename(),
+                    'name' => $file->getFilename(),
+                    'size' => $this->formatFileSize($file->getSize()),
+                    'path' => $file->getPathname(),
+                    'modified' => date('Y-m-d H:i:s', $file->getMTime()),
+                ];
+            }
+        }
+
+        return $forms;
+    }
+
+    /**
+     * Format file size
+     */
+    private function formatFileSize($bytes)
+    {
+        if ($bytes >= 1073741824) {
+            return number_format($bytes / 1073741824, 2) . ' GB';
+        } elseif ($bytes >= 1048576) {
+            return number_format($bytes / 1048576, 2) . ' MB';
+        } elseif ($bytes >= 1024) {
+            return number_format($bytes / 1024, 2) . ' KB';
+        } else {
+            return $bytes . ' bytes';
+        }
+    }
+
+    /**
+     * Preview uploaded SOA form
+     */
+    public function soaPreview(Request $request)
+    {
+        $filename = $request->get('file');
+        $filePath = 'forms/soa/uploads/' . $filename;
+
+        if (Storage::disk('public')->exists($filePath)) {
+            // For now, redirect to download - in future, implement proper preview
+            return response()->download(storage_path('app/public/' . $filePath));
+        }
+
+        return response()->json(['error' => 'File not found'], 404);
+    }
+
+
+    /**
+     * Preview SOA template
+     */
+    public function soaTemplatePreview(Request $request)
+    {
+        $templateName = $request->get('template');
+        $templatePath = public_path('forms/soa/' . $templateName . '.docx');
+
+        if (File::exists($templatePath)) {
+            // Use Microsoft Office Online viewer to display the original DOCX file
+            $fileUrl = urlencode(asset('forms/soa/' . $templateName . '.docx'));
+            $officeViewerUrl = "https://view.officeapps.live.com/op/embed.aspx?src=" . $fileUrl;
+
+            return view('resources.soa-preview', [
+                'templateName' => $templateName,
+                'templatePath' => $templatePath,
+                'fileUrl' => $fileUrl,
+                'officeViewerUrl' => $officeViewerUrl,
+                'originalFileUrl' => asset('forms/soa/' . $templateName . '.docx')
+            ]);
+        }
+
+        return redirect()->back()->with('error', 'Template not found. Please place the file in public/forms/soa/ directory.');
+    }
+
+
+    /**
+     * Download SOA template
+     */
+    public function soaTemplateDownload(Request $request)
+    {
+        $templateName = $request->get('template');
+        $templatePath = public_path('forms/soa/' . $templateName . '.docx');
+
+        if (File::exists($templatePath)) {
+            return response()->download($templatePath);
+        }
+
+        return redirect()->back()->with('error', 'Template not found. Please place the file in public/forms/soa/ directory.');
+    }
+
 }
 
