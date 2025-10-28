@@ -4,57 +4,149 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 {{ __('GTC - Guidance Testing Center') }}
             </h2>
-
         </div>
     </x-slot>
 
     <div class="py-8">
-        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
+        <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                 @if(session('success'))
-                    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+                    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4 m-6">
                         {{ session('success') }}
                     </div>
                 @endif
 
-                <form action="{{ route('resources.gtc.store') }}" method="POST" class="space-y-6">
-                    @csrf
+                @if(session('error'))
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 m-6">
+                        {{ session('error') }}
+                    </div>
+                @endif
 
-                    <div class="border-b border-gray-200 pb-4">
-                        <h3 class="text-lg font-medium text-gray-900 mb-4">Guidance Testing Center Form</h3>
-                        <p class="text-sm text-gray-600">This form is for managing guidance testing center activities and related information.</p>
+                <!-- GTC Forms Content -->
+                <div class="p-6">
+
+                    <!-- Template Categories -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Testing & Application Forms -->
+                            <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                                <div class="flex items-center mb-4">
+                                    <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                                        <i class="fas fa-clipboard-check text-blue-600 text-lg"></i>
+                                    </div>
+                                    <h4 class="font-semibold text-gray-900 text-lg">Testing & Application Forms</h4>
+                                </div>
+                                <div class="space-y-3">
+                                    <div class="flex justify-between items-center py-2">
+                                        <span class="text-sm text-gray-600">Application for SACLI Entrance Exam</span>
+                                        <div class="flex space-x-2">
+                                            <button onclick="downloadTemplate('Application for SACLI Entrance Exam')" class="resource-btn" style="max-width: 120px; padding: 8px 12px; font-size: 12px; background: linear-gradient(135deg, #28a745 0%, #20c997 100%);">
+                                                <i class="fas fa-download mr-1"></i>Download
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="flex justify-between items-center py-2">
+                                        <span class="text-sm text-gray-600">Certificate of Good Moral Request Form</span>
+                                        <div class="flex space-x-2">
+                                            <button onclick="downloadTemplate('Certificate of Good Moral Request Form')" class="resource-btn" style="max-width: 120px; padding: 8px 12px; font-size: 12px; background: linear-gradient(135deg, #28a745 0%, #20c997 100%);">
+                                                <i class="fas fa-download mr-1"></i>Download
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="flex justify-between items-center py-2">
+                                        <span class="text-sm text-gray-600">Instructor's Referral Form</span>
+                                        <div class="flex space-x-2">
+                                            <button onclick="downloadTemplate('INSTRUCTOR\'S REFERRAL FORM')" class="resource-btn" style="max-width: 120px; padding: 8px 12px; font-size: 12px; background: linear-gradient(135deg, #28a745 0%, #20c997 100%);">
+                                                <i class="fas fa-download mr-1"></i>Download
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
                     </div>
 
-                    <!-- Form content will be added here when forms are provided -->
-                    <div class="bg-gray-50 p-4 rounded-lg">
-                        <p class="text-gray-600 text-center py-8">
-                            <i class="fas fa-clipboard-check text-4xl text-gray-400 mb-4 block"></i>
-                            Form content will be displayed here when the actual form is provided.
-                        </p>
+                            <!-- Counseling Forms -->
+                            <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                                <div class="flex items-center mb-4">
+                                    <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mr-3">
+                                        <i class="fas fa-user-friends text-green-600 text-lg"></i>
+                                    </div>
+                                    <h4 class="font-semibold text-gray-900 text-lg">Counseling Forms</h4>
+                                </div>
+                                <div class="space-y-3">
+                                    <div class="flex justify-between items-center py-2">
+                                        <span class="text-sm text-gray-600">Counseling Call Slip</span>
+                                        <div class="flex space-x-2">
+                                            <button onclick="downloadTemplate('COUNSELING CALL SLIP')" class="resource-btn" style="max-width: 120px; padding: 8px 12px; font-size: 12px; background: linear-gradient(135deg, #28a745 0%, #20c997 100%);">
+                                                <i class="fas fa-download mr-1"></i>Download
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="flex justify-between items-center py-2">
+                                        <span class="text-sm text-gray-600">Counseling Appointment QR</span>
+                                        <div class="flex space-x-2">
+                                            <button onclick="downloadTemplate('counseling appointment qr')" class="resource-btn" style="max-width: 120px; padding: 8px 12px; font-size: 12px; background: linear-gradient(135deg, #28a745 0%, #20c997 100%);">
+                                                <i class="fas fa-download mr-1"></i>Download
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="flex justify-between items-center py-2">
+                                        <span class="text-sm text-gray-600">GTC Exit Interview Form for Graduating Students</span>
+                                        <div class="flex space-x-2">
+                                            <button onclick="downloadTemplate('GTC Exit Interview Form for Graduating Students')" class="resource-btn" style="max-width: 120px; padding: 8px 12px; font-size: 12px; background: linear-gradient(135deg, #28a745 0%, #20c997 100%);">
+                                                <i class="fas fa-download mr-1"></i>Download
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
                     </div>
 
-                    <div class="flex justify-between items-center pt-4 border-t border-gray-200">
-                        <div class="flex space-x-3">
-                            <button onclick="window.print()" class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-2 rounded-lg flex items-center">
-                                <i class="fas fa-print mr-2"></i>
-                                Print
-                            </button>
-                            <a href="{{ route('resources.gtc.download') }}" class="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded-lg flex items-center">
-                                <i class="fas fa-download mr-2"></i>
-                                Download
-                            </a>
+                            <!-- Evaluation & Assessment Forms -->
+                            <div class="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+                                <div class="flex items-center mb-4">
+                                    <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
+                                        <i class="fas fa-chart-line text-purple-600 text-lg"></i>
+                                    </div>
+                                    <h4 class="font-semibold text-gray-900 text-lg">Evaluation & Assessment Forms</h4>
+                                </div>
+                                <div class="space-y-3">
+                                    <div class="flex justify-between items-center py-2">
+                                        <span class="text-sm text-gray-600">Online Student-Faculty Evaluation Tool</span>
+                                        <div class="flex space-x-2">
+                                            <button onclick="downloadTemplate('Online Student-Faculty Evaluation Tool')" class="resource-btn" style="max-width: 120px; padding: 8px 12px; font-size: 12px; background: linear-gradient(135deg, #28a745 0%, #20c997 100%);">
+                                                <i class="fas fa-download mr-1"></i>Download
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="flex justify-between items-center py-2">
+                                        <span class="text-sm text-gray-600">GTC After Activity Evaluation Tool</span>
+                                        <div class="flex space-x-2">
+                                            <button onclick="downloadTemplate('GTC After activity evaluation Tool')" class="resource-btn" style="max-width: 120px; padding: 8px 12px; font-size: 12px; background: linear-gradient(135deg, #28a745 0%, #20c997 100%);">
+                                                <i class="fas fa-download mr-1"></i>Download
+                                            </button>
+                                        </div>
                         </div>
-                        <div class="flex space-x-3">
-                            <a href="{{ route('resources.index') }}" class="bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded-lg">
-                                Back to Resources
-                            </a>
-                            <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg">
-                                Save Form
-                            </button>
+                                    <div class="flex justify-between items-center py-2">
+                                        <span class="text-sm text-gray-600">Satisfaction Evaluation Survey on SACLI Guidance Services</span>
+                                        <div class="flex space-x-2">
+                                            <button onclick="downloadTemplate('SATISFACTION EVALUATION SURVEY ON SACLI GUIDANCE SERVICES booklet style')" class="resource-btn" style="max-width: 120px; padding: 8px 12px; font-size: 12px; background: linear-gradient(135deg, #28a745 0%, #20c997 100%);">
+                                                <i class="fas fa-download mr-1"></i>Download
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
                         </div>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
+
+    <script>
+
+
+        function downloadTemplate(templateName) {
+            // Download template functionality
+            const downloadUrl = `{{ route('resources.gtc.template.download') }}?template=${templateName}`;
+            window.location.href = downloadUrl;
+        }
+    </script>
 </x-app-layout>

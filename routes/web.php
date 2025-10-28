@@ -40,9 +40,18 @@ Route::middleware([
         Route::get('/soa/download', [App\Http\Controllers\ResourceController::class, 'soaDownloadFile'])->name('soa.download');
         Route::get('/soa/preview', [App\Http\Controllers\ResourceController::class, 'soaPreview'])->name('soa.preview');
 
+        // GTC Form Upload and Download Routes
+        Route::post('/gtc/upload', [App\Http\Controllers\ResourceController::class, 'gtcUpload'])->name('gtc.upload');
+        Route::get('/gtc/download', [App\Http\Controllers\ResourceController::class, 'gtcDownloadFile'])->name('gtc.download');
+        Route::get('/gtc/preview', [App\Http\Controllers\ResourceController::class, 'gtcPreview'])->name('gtc.preview');
+
         // SOA Template Routes
         Route::get('/soa/template/preview', [App\Http\Controllers\ResourceController::class, 'soaTemplatePreview'])->name('soa.template.preview');
         Route::get('/soa/template/download', [App\Http\Controllers\ResourceController::class, 'soaTemplateDownload'])->name('soa.template.download');
+
+        // GTC Template Routes
+        Route::get('/gtc/template/preview', [App\Http\Controllers\ResourceController::class, 'gtcTemplatePreview'])->name('gtc.template.preview');
+        Route::get('/gtc/template/download', [App\Http\Controllers\ResourceController::class, 'gtcTemplateDownload'])->name('gtc.template.download');
 
         Route::get('/gtc/download', [App\Http\Controllers\ResourceController::class, 'gtcDownload'])->name('gtc.download');
         Route::get('/pod/download', [App\Http\Controllers\ResourceController::class, 'podDownload'])->name('pod.download');

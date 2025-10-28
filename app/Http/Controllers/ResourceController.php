@@ -248,5 +248,94 @@ class ResourceController extends Controller
         return redirect()->back()->with('error', 'Template not found. Please place the file in public/forms/soa/ directory.');
     }
 
+    /**
+     * Preview GTC template
+     */
+    public function gtcTemplatePreview(Request $request)
+    {
+        $templateName = $request->get('template');
+        $templatePath = public_path('forms/gtc/' . $templateName . '.docx');
+
+        if (File::exists($templatePath)) {
+            return view('resources.gtc-preview', [
+                'templateName' => $templateName,
+                'templatePath' => $templatePath,
+                'originalFileUrl' => asset('forms/gtc/' . $templateName . '.docx')
+            ]);
+        }
+
+        return redirect()->back()->with('error', 'Template not found. Please place the file in public/forms/gtc/ directory.');
+    }
+
+    /**
+     * Download GTC template
+     */
+    public function gtcTemplateDownload(Request $request)
+    {
+        $templateName = $request->get('template');
+        $templatePath = public_path('forms/gtc/' . $templateName . '.docx');
+
+        if (File::exists($templatePath)) {
+            return response()->download($templatePath);
+        }
+
+        return redirect()->back()->with('error', 'Template not found. Please place the file in public/forms/gtc/ directory.');
+    }
+
+    /**
+     * Upload GTC forms
+     */
+    public function gtcUpload(Request $request)
+    {
+        $request->validate([
+            'forms.*' => 'required|file|mimes:doc,docx|max:10240', // 10MB max per file
+        ]);
+
+        $uploadedFiles = [];
+        $uploadPath = 'forms/gtc/uploads';
+
+        if ($request->hasFile('forms')) {
+            foreach ($request->file('forms') as $file) {
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $file->storeAs($uploadPath, $filename, 'public');
+                $uploadedFiles[] = $filename;
+            }
+        }
+
+        return redirect()->route('resources.gtc')->with('success',
+            count($uploadedFiles) . ' form(s) uploaded successfully!');
+    }
+
+    /**
+     * Download specific GTC form
+     */
+    public function gtcDownloadFile(Request $request)
+    {
+        $filename = $request->get('file');
+        $filePath = 'forms/gtc/uploads/' . $filename;
+
+        if (Storage::disk('public')->exists($filePath)) {
+            return response()->download(storage_path('app/public/' . $filePath));
+        }
+
+        return redirect()->back()->with('error', 'File not found.');
+    }
+
+    /**
+     * Preview uploaded GTC form
+     */
+    public function gtcPreview(Request $request)
+    {
+        $filename = $request->get('file');
+        $filePath = 'forms/gtc/uploads/' . $filename;
+
+        if (Storage::disk('public')->exists($filePath)) {
+            // For now, redirect to download - in future, implement proper preview
+            return response()->download(storage_path('app/public/' . $filePath));
+        }
+
+        return response()->json(['error' => 'File not found'], 404);
+    }
+
 }
 
