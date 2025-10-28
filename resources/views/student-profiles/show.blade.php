@@ -19,9 +19,29 @@
 
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                 <div class="p-6 space-y-6">
+                    {{-- Header with Profile Picture --}}
                     <div class="border-b pb-4">
-                        <h3 class="text-2xl font-bold text-gray-900">{{ $studentProfile->getFullNameAttribute() }}</h3>
-                        <p class="mt-2 text-gray-600">Student ID: {{ $studentProfile->student_id }}</p>
+                        <div class="flex items-center space-x-4">
+                            <div class="shrink-0">
+                                <img class="h-[18px] w-[18px] object-cover rounded-full border border-blue-200"
+                                     src="{{ $studentProfile->profile_picture_url }}"
+                                     alt="{{ $studentProfile->full_name }}">
+                            </div>
+                            <div class="flex-1">
+                                <h3 class="text-2xl font-bold text-gray-900">{{ $studentProfile->getFullNameAttribute() }}</h3>
+                                <p class="mt-1 text-base text-gray-600">Student ID: {{ $studentProfile->student_id }}</p>
+                                <div class="mt-3">
+                                    <span class="px-3 py-1 text-sm font-semibold rounded-full
+                                        @if($studentProfile->status === 'active') bg-green-100 text-green-800
+                                        @elseif($studentProfile->status === 'inactive') bg-red-100 text-red-800
+                                        @elseif($studentProfile->status === 'graduated') bg-blue-100 text-blue-800
+                                        @else bg-gray-100 text-gray-800
+                                        @endif">
+                                        {{ ucfirst($studentProfile->status) }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">

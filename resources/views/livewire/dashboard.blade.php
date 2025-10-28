@@ -1,5 +1,6 @@
 <div class="fade-in">
-    <!-- Statistics Grid -->
+    <!-- Statistics Grid (Faculty/Staff and Admin only) -->
+    @if(auth()->user()->canEdit())
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
         <!-- Total Students -->
         <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6 card-hover">
@@ -47,7 +48,7 @@
         </div>
     </div>
 
-    <!-- Additional Statistics -->
+    <!-- Additional Statistics (Faculty/Staff and Admin only) -->
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
         <!-- Dropped Students -->
         <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6 card-hover">
@@ -79,6 +80,40 @@
             </div>
         </div>
     </div>
+    @else
+    <!-- Student Statistics (Students only) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+        <!-- Total Events -->
+        <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6 card-hover">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-yellow-100">
+                    <svg class="h-8 w-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                </div>
+                <div class="ml-4">
+                    <div class="text-sm font-medium text-gray-500">Total Events</div>
+                    <div class="text-2xl font-semibold text-gray-900">{{ $stats['total_events'] }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upcoming Events -->
+        <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6 card-hover">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-blue-100">
+                    <svg class="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <div class="ml-4">
+                    <div class="text-sm font-medium text-gray-500">Upcoming Events</div>
+                    <div class="text-2xl font-semibold text-gray-900">{{ $upcomingEvents->count() }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
 
     <!-- Calendar and Events Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
@@ -204,7 +239,8 @@
             </div>
         </div>
 
-        <!-- Inactive Students -->
+        <!-- Inactive Students (Faculty/Staff and Admin only) -->
+        @if(auth()->user()->canEdit())
         <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg card-hover">
             <div class="p-6">
                 <div class="flex justify-between items-center mb-4">
@@ -240,6 +276,40 @@
                 @endif
             </div>
         </div>
+        @else
+        <!-- Student Resources (for students only) -->
+        <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg card-hover">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-semibold text-gray-800">Quick Links</h2>
+                </div>
+                <div class="space-y-3">
+                    <a href="{{ route('events.index') }}" class="block p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition">
+                        <div class="flex items-center">
+                            <svg class="h-6 w-6 text-blue-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            <div>
+                                <div class="font-medium text-gray-900">View All Events</div>
+                                <div class="text-sm text-gray-500">Browse upcoming events</div>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="{{ route('resources.index') }}" class="block p-4 bg-green-50 rounded-lg hover:bg-green-100 transition">
+                        <div class="flex items-center">
+                            <svg class="h-6 w-6 text-green-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            <div>
+                                <div class="font-medium text-gray-900">Resources</div>
+                                <div class="text-sm text-gray-500">Access forms and documents</div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        @endif
     </div>
 
     <!-- Events Modal for Multiple Events -->

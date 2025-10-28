@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class StudentProfile extends Model
 {
@@ -15,6 +16,7 @@ class StudentProfile extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'user_id',
         'student_id',
         'first_name',
         'last_name',
@@ -43,6 +45,14 @@ class StudentProfile extends Model
         'emergency_contact' => 'array',
         'medical_information' => 'array',
     ];
+
+    /**
+     * Get the user associated with the student profile.
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
     /**
      * Get the full name of the student.

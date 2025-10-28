@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\FormAccessLog;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\View\View;
@@ -15,6 +16,7 @@ class ResourceController extends Controller
      */
     public function soa(): View
     {
+        FormAccessLog::logAccess('soa', 'view');
         return view('resources.soa');
     }
 
@@ -23,6 +25,7 @@ class ResourceController extends Controller
      */
     public function gtc(): View
     {
+        FormAccessLog::logAccess('gtc', 'view');
         return view('resources.gtc');
     }
 
@@ -31,6 +34,7 @@ class ResourceController extends Controller
      */
     public function pod(): View
     {
+        FormAccessLog::logAccess('pod', 'view');
         return view('resources.pod');
     }
 
@@ -132,6 +136,8 @@ class ResourceController extends Controller
                 $filename = time() . '_' . $file->getClientOriginalName();
                 $file->storeAs($uploadPath, $filename, 'public');
                 $uploadedFiles[] = $filename;
+
+                FormAccessLog::logAccess('soa', 'upload', $filename, $uploadPath . '/' . $filename);
             }
         }
 
@@ -148,6 +154,7 @@ class ResourceController extends Controller
         $filePath = 'forms/soa/uploads/' . $filename;
 
         if (Storage::disk('public')->exists($filePath)) {
+            FormAccessLog::logAccess('soa', 'download', $filename, $filePath);
             return response()->download(storage_path('app/public/' . $filePath));
         }
 
@@ -221,6 +228,7 @@ class ResourceController extends Controller
         $templatePath = public_path('forms/soa/' . $templateName . '.docx');
 
         if (File::exists($templatePath)) {
+            FormAccessLog::logAccess('soa', 'preview', $templateName, 'forms/soa/' . $templateName . '.docx');
             return view('resources.soa-preview', [
                 'templateName' => $templateName,
                 'templatePath' => $templatePath,
@@ -242,6 +250,7 @@ class ResourceController extends Controller
         $templatePath = public_path('forms/soa/' . $templateName . '.docx');
 
         if (File::exists($templatePath)) {
+            FormAccessLog::logAccess('soa', 'download', $templateName, 'forms/soa/' . $templateName . '.docx');
             return response()->download($templatePath);
         }
 
@@ -257,6 +266,7 @@ class ResourceController extends Controller
         $templatePath = public_path('forms/gtc/' . $templateName . '.docx');
 
         if (File::exists($templatePath)) {
+            FormAccessLog::logAccess('gtc', 'preview', $templateName, 'forms/gtc/' . $templateName . '.docx');
             return view('resources.gtc-preview', [
                 'templateName' => $templateName,
                 'templatePath' => $templatePath,
@@ -276,6 +286,7 @@ class ResourceController extends Controller
         $templatePath = public_path('forms/gtc/' . $templateName . '.docx');
 
         if (File::exists($templatePath)) {
+            FormAccessLog::logAccess('gtc', 'download', $templateName, 'forms/gtc/' . $templateName . '.docx');
             return response()->download($templatePath);
         }
 
@@ -299,6 +310,8 @@ class ResourceController extends Controller
                 $filename = time() . '_' . $file->getClientOriginalName();
                 $file->storeAs($uploadPath, $filename, 'public');
                 $uploadedFiles[] = $filename;
+
+                FormAccessLog::logAccess('gtc', 'upload', $filename, $uploadPath . '/' . $filename);
             }
         }
 
@@ -315,6 +328,7 @@ class ResourceController extends Controller
         $filePath = 'forms/gtc/uploads/' . $filename;
 
         if (Storage::disk('public')->exists($filePath)) {
+            FormAccessLog::logAccess('gtc', 'download', $filename, $filePath);
             return response()->download(storage_path('app/public/' . $filePath));
         }
 

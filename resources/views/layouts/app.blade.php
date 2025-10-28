@@ -49,10 +49,17 @@
                             </a>
                         </li>
                         <li>
-                            <a href="{{ route('resources.index') }}" class="{{ request()->routeIs('resources.*') ? 'active' : '' }} nav-link-hover">
+                            <a href="{{ route('resources.index') }}" class="{{ request()->routeIs('resources.*') && !request()->routeIs('analytics.*') ? 'active' : '' }} nav-link-hover">
                                 <span class="nav-icon"><i class="fas fa-cubes"></i></span> <span class="nav-text">Resource Management</span>
                             </a>
                         </li>
+                        @if(auth()->user()->canEdit())
+                        <li>
+                            <a href="{{ route('analytics.index') }}" class="{{ request()->routeIs('analytics.*') ? 'active' : '' }} nav-link-hover">
+                                <span class="nav-icon"><i class="fas fa-chart-line"></i></span> <span class="nav-text">Analytics</span>
+                            </a>
+                        </li>
+                        @endif
                         @if(auth()->user()->canManageUsers())
                         <li>
                             <a href="{{ route('users.index') }}" class="{{ request()->routeIs('users.*') ? 'active' : '' }} nav-link-hover">

@@ -121,6 +121,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Password Timeout
+    |--------------------------------------------------------------------------
+    |
+    | This value determines the number of seconds before a password confirmation
+    | times out and the user is required to re-enter their password.
+    |
+    */
+
+    'password_timeout' => 10800,
+
+    /*
+    |--------------------------------------------------------------------------
     | Register View Routes
     |--------------------------------------------------------------------------
     |

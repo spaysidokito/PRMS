@@ -38,7 +38,15 @@
                             <i class="fas fa-eye" id="password-eye"></i>
                         </button>
                     </div>
-                    <div class="password-strength">
+                    <div class="password-requirements" style="margin-top: 8px; font-size: 12px; color: #666;">
+                        <div style="margin-bottom: 4px; font-weight: 500;">Password must contain:</div>
+                        <div id="req-length" style="margin-left: 8px;">✗ At least 8 characters</div>
+                        <div id="req-lowercase" style="margin-left: 8px;">✗ Lowercase letter (a-z)</div>
+                        <div id="req-uppercase" style="margin-left: 8px;">✗ Uppercase letter (A-Z)</div>
+                        <div id="req-number" style="margin-left: 8px;">✗ Number (0-9)</div>
+                        <div id="req-symbol" style="margin-left: 8px;">✗ Symbol (!@#$%^&*)</div>
+                    </div>
+                    <div class="password-strength" style="margin-top: 8px;">
                         <div class="strength-bar">
                             <div class="strength-fill" id="strength-fill"></div>
                         </div>
@@ -85,7 +93,7 @@
             }
         }
 
-        // Password strength checker
+        // Password strength checker with requirements
         document.getElementById('password').addEventListener('input', function() {
             const password = this.value;
             const strengthFill = document.getElementById('strength-fill');
@@ -95,11 +103,26 @@
             let text = 'Very Weak';
             let color = '#ff4444';
 
-            if (password.length >= 8) strength++;
-            if (password.match(/[a-z]/)) strength++;
-            if (password.match(/[A-Z]/)) strength++;
-            if (password.match(/[0-9]/)) strength++;
-            if (password.match(/[^a-zA-Z0-9]/)) strength++;
+            // Check requirements
+            const hasLength = password.length >= 8;
+            const hasLowercase = /[a-z]/.test(password);
+            const hasUppercase = /[A-Z]/.test(password);
+            const hasNumber = /[0-9]/.test(password);
+            const hasSymbol = /[^a-zA-Z0-9]/.test(password);
+
+            // Update requirement indicators
+            updateRequirement('req-length', hasLength);
+            updateRequirement('req-lowercase', hasLowercase);
+            updateRequirement('req-uppercase', hasUppercase);
+            updateRequirement('req-number', hasNumber);
+            updateRequirement('req-symbol', hasSymbol);
+
+            // Calculate strength
+            if (hasLength) strength++;
+            if (hasLowercase) strength++;
+            if (hasUppercase) strength++;
+            if (hasNumber) strength++;
+            if (hasSymbol) strength++;
 
             switch(strength) {
                 case 0:
@@ -130,5 +153,16 @@
             strengthText.textContent = text;
             strengthText.style.color = color;
         });
+
+        function updateRequirement(elementId, isMet) {
+            const element = document.getElementById(elementId);
+            if (isMet) {
+                element.style.color = '#00aa00';
+                element.innerHTML = element.innerHTML.replace('✗', '✓');
+            } else {
+                element.style.color = '#666';
+                element.innerHTML = element.innerHTML.replace('✓', '✗');
+            }
+        }
     </script>
 </x-guest-layout>

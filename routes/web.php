@@ -64,4 +64,10 @@ Route::middleware([
     Route::get('/users', function () {
         return view('users.index');
     })->name('users.index');
+
+    // Analytics Routes (Faculty/Staff and Admin only)
+    Route::prefix('analytics')->name('analytics.')->group(function () {
+        Route::get('/', [App\Http\Controllers\AnalyticsController::class, 'index'])->name('index');
+        Route::get('/export', [App\Http\Controllers\AnalyticsController::class, 'export'])->name('export');
+    });
 });

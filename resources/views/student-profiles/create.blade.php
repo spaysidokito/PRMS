@@ -32,8 +32,19 @@
                         </div>
                     @endif
 
-                    <form method="POST" action="{{ route('student-profiles.store') }}">
+                    <form method="POST" action="{{ route('student-profiles.store') }}" enctype="multipart/form-data">
                         @csrf
+
+                        {{-- Profile Picture Upload --}}
+                        <div class="mb-6 bg-gray-50 p-4 rounded-lg">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Profile Picture (Optional)
+                            </label>
+                            <input type="file" name="profile_picture" accept="image/*"
+                                   class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                            <p class="mt-1 text-xs text-gray-500">JPEG, PNG, JPG or GIF (max 2MB). If not uploaded, a default avatar will be used.</p>
+                        </div>
+
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
                                 <label for="student_id" class="block text-sm font-medium text-gray-700">Student ID</label>

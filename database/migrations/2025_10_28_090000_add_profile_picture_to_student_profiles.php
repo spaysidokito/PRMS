@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('form_access_logs', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::table('student_profiles', function (Blueprint $table) {
+            $table->string('profile_picture')->nullable()->after('email');
         });
     }
 
@@ -22,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('form_access_logs');
+        Schema::table('student_profiles', function (Blueprint $table) {
+            $table->dropColumn('profile_picture');
+        });
     }
 };
