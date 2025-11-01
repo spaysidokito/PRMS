@@ -55,6 +55,20 @@
                         </li>
                         @if(auth()->user()->canEdit())
                         <li>
+                            <a href="{{ route('form-submissions.index') }}" class="{{ request()->routeIs('form-submissions.index') || request()->routeIs('form-submissions.show') ? 'active' : '' }} nav-link-hover">
+                                <span class="nav-icon"><i class="fas fa-file-upload"></i></span> <span class="nav-text">Form Submissions</span>
+                            </a>
+                        </li>
+                        @endif
+                        @if(auth()->user()->isStudent())
+                        <li>
+                            <a href="{{ route('form-submissions.my-submissions') }}" class="{{ request()->routeIs('form-submissions.my-submissions') || request()->routeIs('form-submissions.create') || request()->routeIs('form-submissions.show') ? 'active' : '' }} nav-link-hover">
+                                <span class="nav-icon"><i class="fas fa-file-upload"></i></span> <span class="nav-text">My Submissions</span>
+                            </a>
+                        </li>
+                        @endif
+                        @if(auth()->user()->canEdit())
+                        <li>
                             <a href="{{ route('analytics.index') }}" class="{{ request()->routeIs('analytics.*') ? 'active' : '' }} nav-link-hover">
                                 <span class="nav-icon"><i class="fas fa-chart-line"></i></span> <span class="nav-text">Analytics</span>
                             </a>

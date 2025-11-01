@@ -25,6 +25,21 @@ Route::middleware([
     Route::get('/my-profile/edit', [StudentProfileController::class, 'editMyProfile'])->name('my-profile.edit');
     Route::put('/my-profile/update', [StudentProfileController::class, 'updateMyProfile'])->name('my-profile.update');
 
+    // Form Submissions
+    Route::prefix('form-submissions')->name('form-submissions.')->group(function () {
+        // Student routes
+        Route::get('/my-submissions', [App\Http\Controllers\FormSubmissionController::class, 'mySubmissions'])->name('my-submissions');
+        Route::get('/create', [App\Http\Controllers\FormSubmissionController::class, 'create'])->name('create');
+        Route::post('/store', [App\Http\Controllers\FormSubmissionController::class, 'store'])->name('store');
+
+        // Admin/Staff routes
+        Route::get('/', [App\Http\Controllers\FormSubmissionController::class, 'index'])->name('index');
+        Route::get('/{formSubmission}', [App\Http\Controllers\FormSubmissionController::class, 'show'])->name('show');
+        Route::get('/{formSubmission}/print', [App\Http\Controllers\FormSubmissionController::class, 'print'])->name('print');
+        Route::put('/{formSubmission}/status', [App\Http\Controllers\FormSubmissionController::class, 'updateStatus'])->name('update-status');
+        Route::delete('/{formSubmission}', [App\Http\Controllers\FormSubmissionController::class, 'destroy'])->name('destroy');
+    });
+
     Route::resource('events', EventController::class);
 
     Route::get('/resources', function () {
