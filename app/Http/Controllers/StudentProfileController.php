@@ -195,4 +195,86 @@ class StudentProfileController extends Controller
         return redirect()->route('student-profiles.index')
             ->with('message', 'Student profile and user account deleted successfully.');
     }
+
+    /**
+     * Display the authenticated student's profile.
+     */
+    public function myProfile()
+    {
+        $user = Auth::user();
+
+        // Check if user is a student
+        if (!$user->isStudent()) {
+            abort(403, 'This page is only accessible to students.');
+        }
+
+        $studentProfile = $user->studentProfile;
+
+        if (!$studentProfile) {
+            abort(404, 'Student profile not found. Please contact the administrator.');
+        }
+
+        return view('student-profiles.my-profile', compact('studentProfile'));
+    }
+
+    /**
+     * Show the form for editing the authenticated student's profile.
+     */
+    public function editMyProfile()
+    {
+        $user = Auth::user();
+
+        // Check if user is a student
+        if (!$user->isStudent()) {
+            abort(403, 'This page is only accessible to students.');
+        }
+
+        $studentProfile = $user->studentProfile;
+
+        if (!$studentProfile) {
+            abort(404, 'Student profile not found. Please contact the administrator.');
+        }
+
+        return view('student-profiles.edit-my-profile', compact('studentProfile'));
+    }
+
+    /**
+     * Update the authenticated student's profile.
+     */
+    public function updateMyProfile(Request $request)
+    {
+        $user = Auth::user();
+
+        // Check if user is a student
+        if (!$user->isStudent()) {
+            abort(403, 'This page is only accessible to students.');
+        }
+
+        $studentProfile = $user->studentProfile;
+
+        if (!$studentProfile) {
+            abort(404, 'Student profile not found. Please contact the administrator.');
+        }
+
+        // Students can only update limited fields
+        $validatedData = $request->validate([
+            'address' => 'required|string|max:255',
+            'contact_number' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:student_profiles,email,' . $studentProfile->id . '|unique:users,email,' . $user->id,
+        ]);
+
+        DB::transaction(function () use ($validatedData, $studentProfile, $user) {
+            // Update student profile
+            $studentProfile->update($validatedData);
+
+            // Update user email if changed
+            if ($user->email !== $validatedData['email']) {
+                $user->update([
+                    'email' => $validatedData['email'],
+                ]);
+            }
+        });
+
+        return redirect()->route('my-profile')->with('message', 'Your profile has been updated successfully.');
+    }
 }

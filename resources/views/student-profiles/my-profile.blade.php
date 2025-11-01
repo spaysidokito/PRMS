@@ -1,11 +1,7 @@
-@php
-    use Illuminate\Support\Facades\Auth;
-@endphp
-
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Student Details') }}
+            {{ __('My Profile') }}
         </h2>
     </x-slot>
 
@@ -95,55 +91,15 @@
                             <h4 class="text-sm font-medium text-gray-500">Department/Cluster</h4>
                             <p class="mt-1 text-lg text-gray-900">{{ $studentProfile->department_cluster }}</p>
                         </div>
-
-                        <div>
-                            <h4 class="text-sm font-medium text-gray-500">Status</h4>
-                            <span class="mt-1 px-3 py-1 inline-flex text-sm font-semibold rounded-full
-                                {{ $studentProfile->status === 'active' ? 'bg-green-100 text-green-800' : '' }}
-                                {{ $studentProfile->status === 'inactive' ? 'bg-gray-100 text-gray-800' : '' }}
-                                {{ $studentProfile->status === 'graduated' ? 'bg-blue-100 text-blue-800' : '' }}
-                                {{ $studentProfile->status === 'dropped' ? 'bg-red-100 text-red-800' : '' }}">
-                                {{ ucfirst($studentProfile->status) }}
-                            </span>
-                        </div>
                     </div>
-
-                    @if($studentProfile->emergency_contact)
-                    <div class="mt-6 pt-4 border-t border-gray-200">
-                        <h4 class="text-lg font-semibold mb-2">Emergency Contact Information</h4>
-                        <div class="bg-gray-50 rounded-lg p-4">
-                            <pre class="whitespace-pre-wrap text-sm text-gray-700">{{ json_encode($studentProfile->emergency_contact, JSON_PRETTY_PRINT) }}</pre>
-                        </div>
-                    </div>
-                    @endif
-
-                    @if($studentProfile->medical_information)
-                    <div class="mt-6 pt-4 border-t border-gray-200">
-                        <h4 class="text-lg font-semibold mb-2">Medical Information</h4>
-                        <div class="bg-gray-50 rounded-lg p-4">
-                            <pre class="whitespace-pre-wrap text-sm text-gray-700">{{ json_encode($studentProfile->medical_information, JSON_PRETTY_PRINT) }}</pre>
-                        </div>
-                    </div>
-                    @endif
 
                     <div class="mt-6 flex items-center justify-start gap-4 border-t pt-4">
-                        <a href="{{ route('student-profiles.index') }}" class="inline-flex items-center px-6 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700">
-                            Back to List
+                        <a href="{{ route('dashboard') }}" class="inline-flex items-center px-6 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700">
+                            Back to Dashboard
                         </a>
-                        @if(Auth::user()->canEdit())
-                        <a href="{{ route('student-profiles.edit', $studentProfile->id) }}" class="inline-flex items-center px-6 py-2 bg-yellow-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-yellow-700">
-                            Edit Profile
+                        <a href="{{ route('my-profile.edit') }}" class="inline-flex items-center px-6 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700">
+                            Update My Info
                         </a>
-                        @endif
-                        @if(Auth::user()->canDelete())
-                        <form action="{{ route('student-profiles.destroy', $studentProfile->id) }}" method="POST" class="inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="inline-flex items-center px-6 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700" onclick="return confirm('Are you sure you want to delete this student profile?')">
-                                Delete Profile
-                            </button>
-                        </form>
-                        @endif
                     </div>
                 </div>
             </div>

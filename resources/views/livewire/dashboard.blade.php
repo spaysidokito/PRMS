@@ -284,6 +284,17 @@
                     <h2 class="text-xl font-semibold text-gray-800">Quick Links</h2>
                 </div>
                 <div class="space-y-3">
+                    <a href="{{ route('my-profile') }}" class="block p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition">
+                        <div class="flex items-center">
+                            <svg class="h-6 w-6 text-purple-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                            <div>
+                                <div class="font-medium text-gray-900">My Profile</div>
+                                <div class="text-sm text-gray-500">View and update your information</div>
+                            </div>
+                        </div>
+                    </a>
                     <a href="{{ route('events.index') }}" class="block p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition">
                         <div class="flex items-center">
                             <svg class="h-6 w-6 text-blue-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -19,6 +19,12 @@ Route::middleware([
     })->name('dashboard');
 
     Route::resource('student-profiles', StudentProfileController::class);
+
+    // Student's own profile routes
+    Route::get('/my-profile', [StudentProfileController::class, 'myProfile'])->name('my-profile');
+    Route::get('/my-profile/edit', [StudentProfileController::class, 'editMyProfile'])->name('my-profile.edit');
+    Route::put('/my-profile/update', [StudentProfileController::class, 'updateMyProfile'])->name('my-profile.update');
+
     Route::resource('events', EventController::class);
 
     Route::get('/resources', function () {

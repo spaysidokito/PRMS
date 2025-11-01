@@ -89,6 +89,12 @@
                                 {{ __('Manage Account') }}
                             </div>
 
+                            @if(Auth::user()->isStudent())
+                                <x-dropdown-link href="{{ route('my-profile') }}">
+                                    {{ __('My Profile') }}
+                                </x-dropdown-link>
+                            @endif
+
                             <x-dropdown-link href="{{ route('profile.show') }}">
                                 {{ __('Profile') }}
                             </x-dropdown-link>
@@ -148,6 +154,12 @@
 
             <div class="mt-3 space-y-1">
                 <!-- Account Management -->
+                @if(Auth::user()->isStudent())
+                    <x-responsive-nav-link href="{{ route('my-profile') }}" :active="request()->routeIs('my-profile')">
+                        {{ __('My Profile') }}
+                    </x-responsive-nav-link>
+                @endif
+
                 <x-responsive-nav-link href="{{ route('profile.show') }}" :active="request()->routeIs('profile.show')">
                     {{ __('Profile') }}
                 </x-responsive-nav-link>
