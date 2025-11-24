@@ -8,17 +8,22 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Validation\Rules\Password;
 
 class UserManagement extends Component
 {
     use WithPagination;
 
+    protected $paginationTheme = 'tailwind';
+
     public $search = '';
     public $sortField = 'name';
     public $sortDirection = 'asc';
-    public $confirmingUserDeletion = false;
-    public $userToDelete = null;
+    public $statusFilter = 'all'; // all, active, inactive
+    public $confirmingUserToggle = false;
+    public $userToToggle = null;
+    public $toggleAction = '';
 
     // Create/Edit User Form
     public $userId = null;
@@ -30,7 +35,7 @@ class UserManagement extends Component
     public $showUserModal = false;
     public $isEditing = false;
 
-    protected $queryString = ['search', 'sortField', 'sortDirection'];
+    protected $queryString = ['search', 'sortField', 'sortDirection', 'statusFilter'];
 
     public function mount()
     {
@@ -59,6 +64,27 @@ class UserManagement extends Component
             $this->sortDirection = 'asc';
         }
         $this->sortField = $field;
+    }
+
+    public function filterByStatus($status)
+    {
+        $this->statusFilter = $status;
+        $this->resetPage();
+    }
+
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingSortField()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingSortDirection()
+    {
+        $this->resetPage();
     }
 
     public function createUser()
@@ -111,32 +137,39 @@ class UserManagement extends Component
         $this->resetForm();
     }
 
-    public function confirmUserDeletion($userId)
+    public function confirmUserToggle($userId, $action)
     {
-        if (!Auth::user()->canDelete()) {
-            session()->flash('error', 'You do not have permission to delete users.');
+        if (!Auth::user()->canManageUsers()) {
+            session()->flash('error', 'You do not have permission to manage users.');
             return;
         }
 
-        $this->confirmingUserDeletion = true;
-        $this->userToDelete = $userId;
+        $this->confirmingUserToggle = true;
+        $this->userToToggle = $userId;
+        $this->toggleAction = $action;
     }
 
-    public function deleteUser()
+    public function toggleUserStatus()
     {
-        if (!Auth::user()->canDelete()) {
-            session()->flash('error', 'You do not have permission to delete users.');
+        if (!Auth::user()->canManageUsers()) {
+            session()->flash('error', 'You do not have permission to manage users.');
             return;
         }
 
-        $user = User::find($this->userToDelete);
+        $user = User::find($this->userToToggle);
         if ($user && Auth::check() && $user->id !== Auth::id()) {
-            $user->delete();
-            session()->flash('message', 'User deleted successfully.');
+            $user->is_active = $this->toggleAction === 'activate';
+            $user->save();
+
+            $message = $this->toggleAction === 'activate'
+                ? 'User activated successfully.'
+                : 'User deactivated successfully.';
+            session()->flash('message', $message);
         }
 
-        $this->confirmingUserDeletion = false;
-        $this->userToDelete = null;
+        $this->confirmingUserToggle = false;
+        $this->userToToggle = null;
+        $this->toggleAction = '';
     }
 
     public function resetForm()
@@ -157,13 +190,34 @@ class UserManagement extends Component
             $query->where('name', 'like', '%' . $this->search . '%')
                   ->orWhere('email', 'like', '%' . $this->search . '%');
         })
+        ->when($this->statusFilter === 'active', function ($query) {
+            $query->where('is_active', true);
+        })
+        ->when($this->statusFilter === 'inactive', function ($query) {
+            $query->where('is_active', false);
+        })
         ->with('roles')
         ->orderBy($this->sortField, $this->sortDirection)
         ->paginate(10);
 
+        // Get counts for filter badges using a single optimized query
+        $counts = User::selectRaw('
+            COUNT(*) as total,
+            SUM(CASE WHEN is_active = 1 THEN 1 ELSE 0 END) as active,
+            SUM(CASE WHEN is_active = 0 THEN 1 ELSE 0 END) as inactive
+        ')->first();
+
+        // Cache roles for 1 hour since they rarely change
+        $roles = Cache::remember('all_roles', 3600, function () {
+            return Role::all();
+        });
+
         return view('livewire.user-management', [
             'users' => $users,
-            'roles' => Role::all()
+            'roles' => $roles,
+            'activeCount' => $counts->active ?? 0,
+            'inactiveCount' => $counts->inactive ?? 0,
+            'totalCount' => $counts->total ?? 0,
         ]);
     }
 }

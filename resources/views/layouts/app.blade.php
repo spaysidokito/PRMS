@@ -67,6 +67,11 @@
                             </a>
                         </li>
                         @endif
+                        <li>
+                            <a href="{{ route('my-documents.index') }}" class="{{ request()->routeIs('my-documents.*') ? 'active' : '' }} nav-link-hover">
+                                <span class="nav-icon"><i class="fas fa-folder-open"></i></span> <span class="nav-text">My Documents</span>
+                            </a>
+                        </li>
                         @if(auth()->user()->canEdit())
                         <li>
                             <a href="{{ route('analytics.index') }}" class="{{ request()->routeIs('analytics.*') ? 'active' : '' }} nav-link-hover">

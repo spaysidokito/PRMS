@@ -29,6 +29,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'is_active',
     ];
 
     /**
@@ -58,6 +59,7 @@ class User extends Authenticatable
     protected $casts = [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_active' => 'boolean',
         ];
 
     public function roles()
@@ -103,5 +105,10 @@ class User extends Authenticatable
     public function studentProfile()
     {
         return $this->hasOne(StudentProfile::class);
+    }
+
+    public function studentDocuments()
+    {
+        return $this->hasMany(StudentDocument::class);
     }
 }

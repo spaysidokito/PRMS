@@ -29,7 +29,34 @@
         </div>
     @endif
 
-    <div class="bg-white shadow-md rounded-lg overflow-hidden">
+    <!-- Status Filter Tabs -->
+    <div class="mb-4 border-b border-gray-200">
+        <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+            <button wire:click="filterByStatus('all')"
+                    class="@if($statusFilter === 'all') border-blue-500 text-blue-600 @else border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 @endif whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-all duration-200 ease-in-out">
+                All Users
+                <span class="@if($statusFilter === 'all') bg-blue-100 text-blue-600 @else bg-gray-100 text-gray-900 @endif ml-2 py-0.5 px-2.5 rounded-full text-xs font-medium transition-all duration-200 ease-in-out">
+                    {{ $totalCount }}
+                </span>
+            </button>
+            <button wire:click="filterByStatus('active')"
+                    class="@if($statusFilter === 'active') border-green-500 text-green-600 @else border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 @endif whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-all duration-200 ease-in-out">
+                Active
+                <span class="@if($statusFilter === 'active') bg-green-100 text-green-600 @else bg-gray-100 text-gray-900 @endif ml-2 py-0.5 px-2.5 rounded-full text-xs font-medium transition-all duration-200 ease-in-out">
+                    {{ $activeCount }}
+                </span>
+            </button>
+            <button wire:click="filterByStatus('inactive')"
+                    class="@if($statusFilter === 'inactive') border-red-500 text-red-600 @else border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 @endif whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-all duration-200 ease-in-out">
+                Deactivated
+                <span class="@if($statusFilter === 'inactive') bg-red-100 text-red-600 @else bg-gray-100 text-gray-900 @endif ml-2 py-0.5 px-2.5 rounded-full text-xs font-medium transition-all duration-200 ease-in-out">
+                    {{ $inactiveCount }}
+                </span>
+            </button>
+        </nav>
+    </div>
+
+    <div class="bg-white shadow-md rounded-lg overflow-hidden" wire:loading.class="opacity-50">
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
                 <tr>
@@ -53,13 +80,16 @@
                         Role
                     </th>
                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Status
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Actions
                     </th>
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
                 @forelse ($users as $user)
-                    <tr>
+                    <tr wire:key="user-{{ $user->id }}">
                         <td class="px-6 py-4 whitespace-nowrap">
                             <div class="text-sm font-medium text-gray-900">{{ $user->name }}</div>
                         </td>
@@ -79,26 +109,48 @@
                                 @endforeach
                             </div>
                         </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            @if($user->is_active)
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                    Active
+                                </span>
+                            @else
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                    Inactive
+                                </span>
+                            @endif
+                        </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             @if(auth()->user()->canEdit())
                                 <button wire:click="editUser({{ $user->id }})" class="text-yellow-600 hover:text-yellow-900 mr-2 inline-flex items-center px-3 py-1 bg-yellow-500 text-white text-xs font-semibold rounded-md hover:bg-yellow-600">Edit</button>
                             @endif
-                            @if(auth()->user()->canDelete() && $user->id !== auth()->id())
-                                <button wire:click="confirmUserDeletion({{ $user->id }})" class="text-red-600 hover:text-red-900 inline-flex items-center px-3 py-1 bg-red-500 text-white text-xs font-semibold rounded-md hover:bg-red-600">Delete</button>
+                            @if(auth()->user()->canManageUsers() && $user->id !== auth()->id())
+                                @if($user->is_active)
+                                    <button wire:click="confirmUserToggle({{ $user->id }}, 'deactivate')" class="text-red-600 hover:text-red-900 inline-flex items-center px-3 py-1 bg-red-500 text-white text-xs font-semibold rounded-md hover:bg-red-600">Deactivate</button>
+                                @else
+                                    <button wire:click="confirmUserToggle({{ $user->id }}, 'activate')" class="text-green-600 hover:text-green-900 inline-flex items-center px-3 py-1 bg-green-500 text-white text-xs font-semibold rounded-md hover:bg-green-600">Activate</button>
+                                @endif
                             @endif
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="4" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">No users found.</td>
+                        <td colspan="5" class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">No users found.</td>
                     </tr>
                 @endforelse
             </tbody>
         </table>
     </div>
 
-    <div class="mt-4">
+    <div class="mt-4" wire:loading.class="opacity-50">
         {{ $users->links() }}
+    </div>
+
+    <!-- Loading Indicator -->
+    <div wire:loading class="fixed top-0 left-0 right-0 z-50">
+        <div class="bg-blue-500 h-1">
+            <div class="bg-blue-700 h-1 animate-pulse"></div>
+        </div>
     </div>
 
     <!-- User Form Modal -->
@@ -156,24 +208,34 @@
         </x-slot>
     </x-dialog-modal>
 
-    <!-- Delete User Confirmation Modal -->
-    <x-dialog-modal wire:model.live="confirmingUserDeletion">
+    <!-- Toggle User Status Confirmation Modal -->
+    <x-dialog-modal wire:model.live="confirmingUserToggle">
         <x-slot name="title">
-            {{ __('Delete User') }}
+            {{ $toggleAction === 'activate' ? __('Activate User') : __('Deactivate User') }}
         </x-slot>
 
         <x-slot name="content">
-            {{ __('Are you sure you want to delete this user? This action cannot be undone.') }}
+            @if($toggleAction === 'activate')
+                {{ __('Are you sure you want to activate this user? They will be able to log in again.') }}
+            @else
+                {{ __('Are you sure you want to deactivate this user? They will not be able to log in until reactivated.') }}
+            @endif
         </x-slot>
 
         <x-slot name="footer">
-            <x-secondary-button wire:click="$set('confirmingUserDeletion', false)" wire:loading.attr="disabled">
+            <x-secondary-button wire:click="$set('confirmingUserToggle', false)" wire:loading.attr="disabled">
                 {{ __('Cancel') }}
             </x-secondary-button>
 
-            <x-danger-button class="ml-3" wire:click="deleteUser" wire:loading.attr="disabled">
-                {{ __('Delete User') }}
-            </x-danger-button>
+            @if($toggleAction === 'activate')
+                <x-button class="ml-3 bg-green-600 hover:bg-green-700" wire:click="toggleUserStatus" wire:loading.attr="disabled">
+                    {{ __('Activate User') }}
+                </x-button>
+            @else
+                <x-danger-button class="ml-3" wire:click="toggleUserStatus" wire:loading.attr="disabled">
+                    {{ __('Deactivate User') }}
+                </x-danger-button>
+            @endif
         </x-slot>
     </x-dialog-modal>
 </div>

@@ -10,6 +10,8 @@ class StudentProfilesTable extends Component
 {
     use WithPagination;
 
+    protected $paginationTheme = 'tailwind';
+
     public $search = '';
     public $sortField = 'last_name'; // Default sort field
     public $sortDirection = 'asc'; // Default sort direction
@@ -28,6 +30,22 @@ class StudentProfilesTable extends Component
             $this->sortDirection = 'asc';
         }
         $this->sortField = $field;
+        $this->resetPage();
+    }
+
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingSortField()
+    {
+        $this->resetPage();
+    }
+
+    public function updatingSortDirection()
+    {
+        $this->resetPage();
     }
 
     public function confirmDelete($studentId)

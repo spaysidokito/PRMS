@@ -17,7 +17,7 @@
     </div>
 
     {{-- Search input and Add button will be moved to the parent Blade view --}}
-    <div class="bg-white shadow-md rounded-lg overflow-hidden card-hover">
+    <div class="bg-white shadow-md rounded-lg overflow-hidden card-hover" wire:loading.class="opacity-50">
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
                 <tr>
@@ -68,7 +68,7 @@
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
                 @forelse ($students as $student)
-                    <tr class="table-row-hover">
+                    <tr class="table-row-hover" wire:key="student-{{ $student->id }}">
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $student->student_id }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $student->getFullNameAttribute() }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $student->course }}</td>
@@ -113,8 +113,15 @@
         </table>
     </div>
 
-    <div class="mt-4">
+    <div class="mt-4" wire:loading.class="opacity-50">
         {{ $students->links() }}
+    </div>
+
+    <!-- Loading Indicator -->
+    <div wire:loading class="fixed top-0 left-0 right-0 z-50">
+        <div class="bg-blue-500 h-1">
+            <div class="bg-blue-700 h-1 animate-pulse"></div>
+        </div>
     </div>
 
     <!-- Delete Confirmation Modal -->

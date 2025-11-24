@@ -86,6 +86,14 @@ Route::middleware([
         return view('users.index');
     })->name('users.index');
 
+    // My Documents Routes (Students)
+    Route::prefix('my-documents')->name('my-documents.')->group(function () {
+        Route::get('/', [App\Http\Controllers\StudentDocumentController::class, 'index'])->name('index');
+        Route::post('/store', [App\Http\Controllers\StudentDocumentController::class, 'store'])->name('store');
+        Route::get('/{id}/download', [App\Http\Controllers\StudentDocumentController::class, 'download'])->name('download');
+        Route::delete('/{id}', [App\Http\Controllers\StudentDocumentController::class, 'destroy'])->name('destroy');
+    });
+
     // Analytics Routes (Faculty/Staff and Admin only)
     Route::prefix('analytics')->name('analytics.')->group(function () {
         Route::get('/', [App\Http\Controllers\AnalyticsController::class, 'index'])->name('index');
