@@ -133,8 +133,21 @@
         </div>
     </div>
 
+    <!-- Mobile Menu Backdrop -->
+    <div x-show="open"
+         @click="open = false"
+         x-transition:enter="transition-opacity ease-linear duration-300"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition-opacity ease-linear duration-300"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         class="fixed inset-0 bg-black bg-opacity-25 z-40 sm:hidden"
+         style="display: none;">
+    </div>
+
     <!-- Responsive Navigation Menu -->
-    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
+    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden relative z-50">
         <!-- Removed responsive dashboard link -->
 
         <!-- Responsive Settings Options -->
@@ -155,17 +168,17 @@
             <div class="mt-3 space-y-1">
                 <!-- Account Management -->
                 @if(Auth::user()->isStudent())
-                    <x-responsive-nav-link href="{{ route('my-profile') }}" :active="request()->routeIs('my-profile')">
+                    <x-responsive-nav-link href="{{ route('my-profile') }}" :active="request()->routeIs('my-profile')" @click="open = false">
                         {{ __('My Profile') }}
                     </x-responsive-nav-link>
                 @endif
 
-                <x-responsive-nav-link href="{{ route('profile.show') }}" :active="request()->routeIs('profile.show')">
+                <x-responsive-nav-link href="{{ route('profile.show') }}" :active="request()->routeIs('profile.show')" @click="open = false">
                     {{ __('Profile') }}
                 </x-responsive-nav-link>
 
                 @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
-                    <x-responsive-nav-link href="{{ route('api-tokens.index') }}" :active="request()->routeIs('api-tokens.index')">
+                    <x-responsive-nav-link href="{{ route('api-tokens.index') }}" :active="request()->routeIs('api-tokens.index')" @click="open = false">
                         {{ __('API Tokens') }}
                     </x-responsive-nav-link>
                 @endif
@@ -175,7 +188,7 @@
                     @csrf
 
                     <x-responsive-nav-link href="{{ route('logout') }}"
-                                   @click.prevent="$root.submit();">
+                                   @click.prevent="$root.submit(); open = false">
                         {{ __('Log Out') }}
                     </x-responsive-nav-link>
                 </form>
@@ -189,12 +202,12 @@
                     </div>
 
                     <!-- Team Settings -->
-                    <x-responsive-nav-link href="{{ route('teams.show', Auth::user()->currentTeam->id) }}" :active="request()->routeIs('teams.show')">
+                    <x-responsive-nav-link href="{{ route('teams.show', Auth::user()->currentTeam->id) }}" :active="request()->routeIs('teams.show')" @click="open = false">
                         {{ __('Team Settings') }}
                     </x-responsive-nav-link>
 
                     @can('create', Laravel\Jetstream\Jetstream::newTeamModel())
-                        <x-responsive-nav-link href="{{ route('teams.create') }}" :active="request()->routeIs('teams.create')">
+                        <x-responsive-nav-link href="{{ route('teams.create') }}" :active="request()->routeIs('teams.create')" @click="open = false">
                             {{ __('Create New Team') }}
                         </x-responsive-nav-link>
                     @endcan

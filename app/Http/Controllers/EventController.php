@@ -24,12 +24,24 @@ class EventController extends Controller
             'title' => 'required|min:3',
             'description' => 'required',
             'start_date' => 'required|date',
-            'end_date' => 'required|date|after:start_date',
+            'start_time' => 'required',
+            'end_date' => 'required|date',
+            'end_time' => 'required',
             'venue' => 'required',
             'type' => 'required|in:social,academic,training,workshop,seminar,other',
         ]);
 
-        $event = Event::create($validated + [
+        // Combine date and time
+        $startDateTime = $validated['start_date'] . ' ' . $validated['start_time'];
+        $endDateTime = $validated['end_date'] . ' ' . $validated['end_time'];
+
+        $event = Event::create([
+            'title' => $validated['title'],
+            'description' => $validated['description'],
+            'start_date' => $startDateTime,
+            'end_date' => $endDateTime,
+            'venue' => $validated['venue'],
+            'type' => $validated['type'],
             'status' => 'upcoming',
             'created_by' => Auth::id()
         ]);
@@ -54,13 +66,27 @@ class EventController extends Controller
             'title' => 'required|min:3',
             'description' => 'required',
             'start_date' => 'required|date',
-            'end_date' => 'required|date|after:start_date',
+            'start_time' => 'required',
+            'end_date' => 'required|date',
+            'end_time' => 'required',
             'venue' => 'required',
             'type' => 'required|in:social,academic,training,workshop,seminar,other',
             'status' => 'required|in:upcoming,ongoing,completed,cancelled',
         ]);
 
-        $event->update($validated);
+        // Combine date and time
+        $startDateTime = $validated['start_date'] . ' ' . $validated['start_time'];
+        $endDateTime = $validated['end_date'] . ' ' . $validated['end_time'];
+
+        $event->update([
+            'title' => $validated['title'],
+            'description' => $validated['description'],
+            'start_date' => $startDateTime,
+            'end_date' => $endDateTime,
+            'venue' => $validated['venue'],
+            'type' => $validated['type'],
+            'status' => $validated['status'],
+        ]);
 
         return redirect()->route('events.show', $event)
             ->with('message', 'Event updated successfully.');

@@ -14,7 +14,7 @@
             @endif
 
             {{-- Statistics --}}
-            <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
                     <div class="flex items-center">
                         <div class="p-3 rounded-full bg-gray-100">
@@ -77,7 +77,8 @@
                     <h3 class="text-lg font-semibold mb-4">All Submissions</h3>
 
                     @if($submissions->count() > 0)
-                        <div class="overflow-x-auto">
+                        <!-- Desktop Table View -->
+                        <div class="hidden md:block overflow-x-auto">
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead class="bg-gray-50">
                                     <tr>
@@ -130,6 +131,58 @@
                                     @endforeach
                                 </tbody>
                             </table>
+                        </div>
+
+                        <!-- Mobile Card View -->
+                        <div class="md:hidden space-y-4">
+                            @foreach ($submissions as $submission)
+                                <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                                    <div class="flex justify-between items-start mb-3">
+                                        <div class="flex-1">
+                                            <div class="text-sm font-medium text-gray-900">{{ $submission->user->name }}</div>
+                                            <div class="text-xs text-gray-500">{{ $submission->studentProfile?->student_id ?? 'N/A' }}</div>
+                                        </div>
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {{ $submission->status_badge_class }} ml-2">
+                                            {{ ucfirst($submission->status) }}
+                                        </span>
+                                    </div>
+
+                                    <div class="space-y-2 mb-3 text-sm">
+                                        <div class="flex items-center text-gray-600">
+                                            <i class="fas fa-file-alt w-5 text-gray-400"></i>
+                                            <span class="ml-2">{{ $submission->form_type_name }}</span>
+                                        </div>
+                                        <div class="flex items-center text-gray-600">
+                                            <i class="fas fa-calendar w-5 text-gray-400"></i>
+                                            <span class="ml-2">{{ $submission->created_at->format('M d, Y g:i A') }}</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex flex-col sm:flex-row gap-2">
+                                        <a href="{{ route('form-submissions.show', $submission->id) }}"
+                                           class="flex-1 text-center px-3 py-2 bg-blue-500 text-white text-sm font-semibold rounded-md hover:bg-blue-600">
+                                            <i class="fas fa-eye mr-1"></i> Review
+                                        </a>
+                                        <a href="{{ route('form-submissions.print', $submission->id) }}"
+                                           target="_blank"
+                                           class="flex-1 text-center px-3 py-2 bg-green-500 text-white text-sm font-semibold rounded-md hover:bg-green-600">
+                                            <i class="fas fa-print mr-1"></i> Print
+                                        </a>
+                                        @if(Auth::user()->canDelete())
+                                            <form action="{{ route('form-submissions.destroy', $submission->id) }}"
+                                                  method="POST" class="flex-1">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit"
+                                                        class="w-full px-3 py-2 bg-red-500 text-white text-sm font-semibold rounded-md hover:bg-red-600"
+                                                        onclick="return confirm('Are you sure you want to delete this submission?')">
+                                                    <i class="fas fa-trash mr-1"></i> Delete
+                                                </button>
+                                            </form>
+                                        @endif
+                                    </div>
+                                </div>
+                            @endforeach
                         </div>
 
                         <div class="mt-4">

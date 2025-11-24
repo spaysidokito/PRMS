@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\FormAccessLog;
+use App\Models\ResourceForm;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\View\View;
@@ -17,7 +18,9 @@ class ResourceController extends Controller
     public function soa(): View
     {
         FormAccessLog::logAccess('soa', 'view');
-        return view('resources.soa');
+        $forms = ResourceForm::byCategory('soa')->active()->ordered()->get();
+        $formsBySubcategory = $forms->groupBy('subcategory');
+        return view('resources.soa', compact('formsBySubcategory'));
     }
 
     /**
@@ -26,7 +29,9 @@ class ResourceController extends Controller
     public function gtc(): View
     {
         FormAccessLog::logAccess('gtc', 'view');
-        return view('resources.gtc');
+        $forms = ResourceForm::byCategory('gtc')->active()->ordered()->get();
+        $formsBySubcategory = $forms->groupBy('subcategory');
+        return view('resources.gtc', compact('formsBySubcategory'));
     }
 
     /**
@@ -35,7 +40,8 @@ class ResourceController extends Controller
     public function pod(): View
     {
         FormAccessLog::logAccess('pod', 'view');
-        return view('resources.pod');
+        $forms = ResourceForm::byCategory('pod')->active()->ordered()->get();
+        return view('resources.pod', compact('forms'));
     }
 
     /**
@@ -84,12 +90,26 @@ class ResourceController extends Controller
     }
 
     /**
-     * Download POD form as PDF
+     * Download POD template
      */
-    public function podDownload()
+    public function podDownload(Request $request)
     {
-        // TODO: Implement PDF generation when forms are provided
-        return response()->json(['message' => 'Download functionality will be implemented when forms are provided']);
+        $templateName = $request->get('template');
+        $templatePath = public_path('forms/pod/' . $templateName . '.docx');
+
+        if (File::exists($templatePath)) {
+            FormAccessLog::logAccess('pod', 'download', $templateName, 'forms/pod/' . $templateName . '.docx');
+            return response()->download($templatePath);
+        }
+
+        // Try PDF extension
+        $templatePath = public_path('forms/pod/' . $templateName . '.pdf');
+        if (File::exists($templatePath)) {
+            FormAccessLog::logAccess('pod', 'download', $templateName, 'forms/pod/' . $templateName . '.pdf');
+            return response()->download($templatePath);
+        }
+
+        return redirect()->back()->with('error', 'Template not found. Please place the file in public/forms/pod/ directory.');
     }
 
     /**
@@ -349,6 +369,149 @@ class ResourceController extends Controller
         }
 
         return response()->json(['error' => 'File not found'], 404);
+    }
+
+    /**
+     * Manage SOA forms
+     */
+    public function manageSoa()
+    {
+        $forms = ResourceForm::byCategory('soa')->ordered()->get();
+        $formsBySubcategory = $forms->groupBy('subcategory');
+
+        return view('resources.manage-soa', [
+            'formsBySubcategory' => $formsBySubcategory,
+            'allForms' => $forms
+        ]);
+    }
+
+    /**
+     * Manage GTC forms
+     */
+    public function manageGtc()
+    {
+        $forms = ResourceForm::byCategory('gtc')->ordered()->get();
+        $formsBySubcategory = $forms->groupBy('subcategory');
+
+        return view('resources.manage-gtc', [
+            'formsBySubcategory' => $formsBySubcategory,
+            'allForms' => $forms
+        ]);
+    }
+
+    /**
+     * Manage POD forms
+     */
+    public function managePod()
+    {
+        $forms = ResourceForm::byCategory('pod')->ordered()->get();
+
+        return view('resources.manage-pod', [
+            'forms' => $forms
+        ]);
+    }
+
+    /**
+     * Store a new resource form
+     */
+    public function storeForm(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'subcategory' => 'nullable|string|max:255',
+            'template_filename' => 'nullable|string|max:255',
+            'display_order' => 'required|integer|min:0',
+            'is_active' => 'nullable|boolean'
+        ]);
+
+        // Determine category from referer
+        $referer = $request->headers->get('referer');
+        $category = 'soa'; // default
+
+        if (str_contains($referer, 'manage-gtc')) {
+            $category = 'gtc';
+        } elseif (str_contains($referer, 'manage-pod')) {
+            $category = 'pod';
+        }
+
+        $validated['category'] = $category;
+        // Set is_active to true by default for new forms
+        $validated['is_active'] = true;
+
+        ResourceForm::create($validated);
+
+        return redirect()->back()->with('success', 'Form added successfully!');
+    }
+
+    /**
+     * Update a resource form
+     */
+    public function updateForm(Request $request, $id)
+    {
+        $form = ResourceForm::findOrFail($id);
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'subcategory' => 'nullable|string|max:255',
+            'template_filename' => 'nullable|string|max:255',
+            'display_order' => 'required|integer|min:0',
+            'is_active' => 'nullable|boolean'
+        ]);
+
+        // Keep is_active as true by default, don't change it during updates
+        // (since we removed the checkbox from the form)
+
+        $form->update($validated);
+
+        return redirect()->back()->with('success', 'Form updated successfully!');
+    }
+
+    /**
+     * Delete a resource form
+     */
+    public function destroyForm($id)
+    {
+        $form = ResourceForm::findOrFail($id);
+        $form->delete();
+
+        return redirect()->back()->with('success', 'Form deleted successfully!');
+    }
+
+    /**
+     * Upload form template file
+     */
+    public function uploadFormFile(Request $request, $id)
+    {
+        $form = ResourceForm::findOrFail($id);
+
+        $request->validate([
+            'template_file' => 'required|file|mimes:doc,docx,pdf|max:10240', // 10MB max
+        ]);
+
+        if ($request->hasFile('template_file')) {
+            $file = $request->file('template_file');
+            $category = $form->category; // soa, gtc, or pod
+
+            // Create directory if it doesn't exist
+            $uploadPath = "forms/{$category}";
+
+            // Generate filename
+            $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $extension = $file->getClientOriginalExtension();
+            $fullFilename = $filename . '.' . $extension;
+
+            // Store file in public directory
+            $file->move(public_path($uploadPath), $fullFilename);
+
+            // Update form template_filename
+            $form->update([
+                'template_filename' => $filename
+            ]);
+
+            return redirect()->back()->with('success', 'File uploaded successfully!');
+        }
+
+        return redirect()->back()->with('error', 'No file was uploaded.');
     }
 
 }

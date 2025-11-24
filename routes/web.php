@@ -52,6 +52,17 @@ Route::middleware([
         Route::get('/gtc', [App\Http\Controllers\ResourceController::class, 'gtc'])->name('gtc');
         Route::get('/pod', [App\Http\Controllers\ResourceController::class, 'pod'])->name('pod');
 
+        // Admin management routes
+        Route::get('/manage-soa', [App\Http\Controllers\ResourceController::class, 'manageSoa'])->name('manage-soa');
+        Route::get('/manage-gtc', [App\Http\Controllers\ResourceController::class, 'manageGtc'])->name('manage-gtc');
+        Route::get('/manage-pod', [App\Http\Controllers\ResourceController::class, 'managePod'])->name('manage-pod');
+
+        // Form CRUD routes
+        Route::post('/forms', [App\Http\Controllers\ResourceController::class, 'storeForm'])->name('forms.store');
+        Route::put('/forms/{id}', [App\Http\Controllers\ResourceController::class, 'updateForm'])->name('forms.update');
+        Route::delete('/forms/{id}', [App\Http\Controllers\ResourceController::class, 'destroyForm'])->name('forms.destroy');
+        Route::post('/forms/{id}/upload', [App\Http\Controllers\ResourceController::class, 'uploadFormFile'])->name('forms.upload');
+
         Route::post('/soa/store', [App\Http\Controllers\ResourceController::class, 'soaStore'])->name('soa.store');
         Route::post('/gtc/store', [App\Http\Controllers\ResourceController::class, 'gtcStore'])->name('gtc.store');
         Route::post('/pod/store', [App\Http\Controllers\ResourceController::class, 'podStore'])->name('pod.store');

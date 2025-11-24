@@ -22,6 +22,9 @@
     <body class="dashboard-body">
         <x-banner />
 
+        <!-- Mobile Overlay -->
+        <div class="mobile-overlay" onclick="toggleMobileSidebar()"></div>
+
         <div class="dashboard-layout">
             <!-- Sidebar -->
             <aside class="dashboard-sidebar slide-in">
@@ -86,14 +89,47 @@
                             </a>
                         </li>
                         @endif
-                        <li>
-                            <a href="{{ route('profile.show') }}" class="nav-link-hover"> {{-- Assuming settings are part of profile --}}
-                                <span class="nav-icon"><i class="fas fa-cog"></i></span> <span class="nav-text">Settings</span>
-                            </a>
-                        </li>
                     </ul>
                 </nav>
                 <div class="sidebar-footer">
+                    <!-- User Profile Links -->
+                    <div class="sidebar-user-section">
+                        <div class="user-info">
+                            @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())
+                                <img class="user-avatar" src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" />
+                            @else
+                                <div class="user-avatar-initial">
+                                    {{ substr(Auth::user()->name, 0, 1) }}
+                                </div>
+                            @endif
+                            <div class="user-details">
+                                <div class="user-name">{{ Auth::user()->name }}</div>
+                                <div class="user-email">{{ Auth::user()->email }}</div>
+                            </div>
+                        </div>
+                        <ul class="user-menu">
+                            @if(Auth::user()->isStudent())
+                            <li>
+                                <a href="{{ route('my-profile') }}" class="{{ request()->routeIs('my-profile') ? 'active' : '' }} nav-link-hover">
+                                    <span class="nav-icon"><i class="fas fa-user"></i></span> <span class="nav-text">My Profile</span>
+                                </a>
+                            </li>
+                            @endif
+                            <li>
+                                <a href="{{ route('profile.show') }}" class="{{ request()->routeIs('profile.show') ? 'active' : '' }} nav-link-hover">
+                                    <span class="nav-icon"><i class="fas fa-cog"></i></span> <span class="nav-text">Settings</span>
+                                </a>
+                            </li>
+                            <li>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit" class="logout-btn nav-link-hover">
+                                        <span class="nav-icon"><i class="fas fa-sign-out-alt"></i></span> <span class="nav-text">Log Out</span>
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
                     <button class="collapse-btn btn-click" onclick="toggleSidebar()">
                         <span class="nav-icon"><i class="fas fa-chevron-left"></i></span> <span class="nav-text">Collapse</span>
                     </button>
@@ -104,15 +140,17 @@
             <div class="dashboard-main-content">
                 <!-- Page Heading / Header -->
                 <header class="dashboard-header fade-in">
+                    <!-- Mobile Menu Toggle -->
+                    <button class="mobile-menu-toggle" onclick="toggleMobileSidebar()" style="display: none; background: none; border: none; font-size: 24px; color: #5E8C7F; cursor: pointer; padding: 8px;">
+                        <i class="fas fa-bars"></i>
+                    </button>
+
                     <div class="header-title">
                         @if (isset($header))
                             {{ $header }}
                         @else
                             Dashboard
                         @endif
-                    </div>
-                    <div class="user-profile-dropdown">
-                        @livewire('navigation-menu') {{-- Repurposing for user dropdown, might need custom component later --}}
                     </div>
                 </header>
 
@@ -126,12 +164,23 @@
         @stack('modals')
         @livewireScripts
         <script>
+            // Mobile sidebar toggle
+            function toggleMobileSidebar() {
+                const sidebar = document.querySelector('.dashboard-sidebar');
+                const overlay = document.querySelector('.mobile-overlay');
+
+                sidebar.classList.toggle('mobile-open');
+                overlay.classList.toggle('active');
+            }
+
+            // Desktop sidebar collapse
             function toggleSidebar() {
                 const sidebar = document.querySelector('.dashboard-sidebar');
                 const mainContent = document.querySelector('.dashboard-main-content');
                 const collapseBtnIcon = document.querySelector('.collapse-btn .fas');
-                const navTexts = document.querySelectorAll('.sidebar-nav .nav-text, .sidebar-footer .nav-text');
+                const navTexts = document.querySelectorAll('.sidebar-nav .nav-text, .sidebar-footer .nav-text, .user-menu .nav-text');
                 const appName = document.querySelector('.sidebar-header .app-name');
+                const userDetails = document.querySelector('.user-details');
 
                 sidebar.classList.toggle('collapsed');
                 mainContent.classList.toggle('collapsed');
@@ -145,6 +194,7 @@
                     }
                     navTexts.forEach(el => el.style.display = 'none');
                     if(appName) appName.style.display = 'none';
+                    if(userDetails) userDetails.style.display = 'none';
 
                 } else {
                     sidebar.style.width = '280px';
@@ -154,9 +204,33 @@
                         collapseBtnIcon.classList.add('fa-chevron-left');
                     }
                     navTexts.forEach(el => el.style.display = 'inline');
-                    if(appName) appName.style.display = 'inline-block'; // or 'inline'
+                    if(appName) appName.style.display = 'inline-block';
+                    if(userDetails) userDetails.style.display = 'block';
                 }
             }
+
+            // Show/hide mobile menu toggle based on screen size
+            function handleResponsive() {
+                const mobileToggle = document.querySelector('.mobile-menu-toggle');
+                const collapseBtn = document.querySelector('.collapse-btn');
+
+                if (window.innerWidth <= 768) {
+                    if (mobileToggle) mobileToggle.style.display = 'block';
+                    if (collapseBtn) collapseBtn.style.display = 'none';
+                } else {
+                    if (mobileToggle) mobileToggle.style.display = 'none';
+                    if (collapseBtn) collapseBtn.style.display = 'flex';
+                    // Close mobile sidebar if open
+                    const sidebar = document.querySelector('.dashboard-sidebar');
+                    const overlay = document.querySelector('.mobile-overlay');
+                    sidebar.classList.remove('mobile-open');
+                    overlay.classList.remove('active');
+                }
+            }
+
+            // Run on load and resize
+            window.addEventListener('load', handleResponsive);
+            window.addEventListener('resize', handleResponsive);
 
             // Enhanced page transition handling
             document.addEventListener('DOMContentLoaded', function() {

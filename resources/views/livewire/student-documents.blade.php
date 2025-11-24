@@ -1,17 +1,16 @@
 <div>
-    <div class="mb-6 flex justify-between items-center">
-        <div class="relative">
+    <div class="mb-4 sm:mb-6 flex flex-col sm:flex-row gap-3 sm:gap-0 sm:justify-between sm:items-center">
+        <div class="relative w-full sm:w-auto">
             <input type="text"
                    wire:model.live="search"
                    placeholder="Search documents..."
-                   class="px-4 py-2 pl-10 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                   style="width: 300px;">
+                   class="w-full sm:w-64 md:w-80 px-4 py-2 pl-10 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-sm">
             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <i class="fas fa-search text-gray-400"></i>
             </div>
         </div>
-        <button wire:click="openUploadModal" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-500 active:bg-blue-700 focus:outline-none focus:border-blue-700 focus:ring focus:ring-blue-200 disabled:opacity-25 transition">
-            <i class="fas fa-upload mr-2"></i> Upload Document
+        <button wire:click="openUploadModal" class="inline-flex items-center justify-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-500 active:bg-blue-700 focus:outline-none focus:border-blue-700 focus:ring focus:ring-blue-200 disabled:opacity-25 transition">
+            <i class="fas fa-upload mr-2"></i> <span class="hidden sm:inline">Upload Document</span><span class="sm:hidden">Upload</span>
         </button>
     </div>
 
@@ -22,85 +21,108 @@
     @endif
 
     <!-- Filter Tabs -->
-    <div class="mb-4 border-b border-gray-200">
-        <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+    <div class="mb-4 sm:mb-6 border-b border-gray-200 overflow-x-auto scrollbar-hide relative">
+        <nav class="-mb-px flex space-x-4 sm:space-x-6 md:space-x-8 min-w-max px-1" aria-label="Tabs">
             <button wire:click="filterByType('all')"
-                    class="@if($filterType === 'all') border-blue-500 text-blue-600 @else border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 @endif whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-all duration-200 ease-in-out">
-                All Documents
-                <span class="@if($filterType === 'all') bg-blue-100 text-blue-600 @else bg-gray-100 text-gray-900 @endif ml-2 py-0.5 px-2.5 rounded-full text-xs font-medium transition-all duration-200 ease-in-out">
+                    class="@if($filterType === 'all') border-blue-500 text-blue-600 @else border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 @endif flex-shrink-0 py-3 sm:py-4 px-1 border-b-2 font-medium text-xs sm:text-sm transition-all duration-200 ease-in-out inline-flex items-center whitespace-nowrap">
+                <span class="hidden sm:inline">All Documents</span><span class="sm:hidden">All</span>
+                <span class="@if($filterType === 'all') bg-blue-100 text-blue-600 @else bg-gray-100 text-gray-900 @endif ml-2 sm:ml-3 py-0.5 px-2 sm:px-2.5 rounded-full text-xs font-medium transition-all duration-200 ease-in-out">
                     {{ $counts->total ?? 0 }}
                 </span>
             </button>
             <button wire:click="filterByType('receipt')"
-                    class="@if($filterType === 'receipt') border-green-500 text-green-600 @else border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 @endif whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-all duration-200 ease-in-out">
+                    class="@if($filterType === 'receipt') border-green-500 text-green-600 @else border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 @endif flex-shrink-0 py-3 sm:py-4 px-1 border-b-2 font-medium text-xs sm:text-sm transition-all duration-200 ease-in-out inline-flex items-center whitespace-nowrap">
                 Receipts
-                <span class="@if($filterType === 'receipt') bg-green-100 text-green-600 @else bg-gray-100 text-gray-900 @endif ml-2 py-0.5 px-2.5 rounded-full text-xs font-medium transition-all duration-200 ease-in-out">
+                <span class="@if($filterType === 'receipt') bg-green-100 text-green-600 @else bg-gray-100 text-gray-900 @endif ml-2 sm:ml-3 py-0.5 px-2 sm:px-2.5 rounded-full text-xs font-medium transition-all duration-200 ease-in-out">
                     {{ $counts->receipt ?? 0 }}
                 </span>
             </button>
             <button wire:click="filterByType('permit')"
-                    class="@if($filterType === 'permit') border-purple-500 text-purple-600 @else border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 @endif whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-all duration-200 ease-in-out">
+                    class="@if($filterType === 'permit') border-purple-500 text-purple-600 @else border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 @endif flex-shrink-0 py-3 sm:py-4 px-1 border-b-2 font-medium text-xs sm:text-sm transition-all duration-200 ease-in-out inline-flex items-center whitespace-nowrap">
                 Permits
-                <span class="@if($filterType === 'permit') bg-purple-100 text-purple-600 @else bg-gray-100 text-gray-900 @endif ml-2 py-0.5 px-2.5 rounded-full text-xs font-medium transition-all duration-200 ease-in-out">
+                <span class="@if($filterType === 'permit') bg-purple-100 text-purple-600 @else bg-gray-100 text-gray-900 @endif ml-2 sm:ml-3 py-0.5 px-2 sm:px-2.5 rounded-full text-xs font-medium transition-all duration-200 ease-in-out">
                     {{ $counts->permit ?? 0 }}
                 </span>
             </button>
             <button wire:click="filterByType('id')"
-                    class="@if($filterType === 'id') border-yellow-500 text-yellow-600 @else border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 @endif whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-all duration-200 ease-in-out">
+                    class="@if($filterType === 'id') border-yellow-500 text-yellow-600 @else border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 @endif flex-shrink-0 py-3 sm:py-4 px-1 border-b-2 font-medium text-xs sm:text-sm transition-all duration-200 ease-in-out inline-flex items-center whitespace-nowrap">
                 IDs
-                <span class="@if($filterType === 'id') bg-yellow-100 text-yellow-600 @else bg-gray-100 text-gray-900 @endif ml-2 py-0.5 px-2.5 rounded-full text-xs font-medium transition-all duration-200 ease-in-out">
+                <span class="@if($filterType === 'id') bg-yellow-100 text-yellow-600 @else bg-gray-100 text-gray-900 @endif ml-2 sm:ml-3 py-0.5 px-2 sm:px-2.5 rounded-full text-xs font-medium transition-all duration-200 ease-in-out">
                     {{ $counts->id ?? 0 }}
                 </span>
             </button>
             <button wire:click="filterByType('certificate')"
-                    class="@if($filterType === 'certificate') border-indigo-500 text-indigo-600 @else border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 @endif whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-all duration-200 ease-in-out">
+                    class="@if($filterType === 'certificate') border-indigo-500 text-indigo-600 @else border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 @endif flex-shrink-0 py-3 sm:py-4 px-1 border-b-2 font-medium text-xs sm:text-sm transition-all duration-200 ease-in-out inline-flex items-center whitespace-nowrap">
                 Certificates
-                <span class="@if($filterType === 'certificate') bg-indigo-100 text-indigo-600 @else bg-gray-100 text-gray-900 @endif ml-2 py-0.5 px-2.5 rounded-full text-xs font-medium transition-all duration-200 ease-in-out">
+                <span class="@if($filterType === 'certificate') bg-indigo-100 text-indigo-600 @else bg-gray-100 text-gray-900 @endif ml-2 sm:ml-3 py-0.5 px-2 sm:px-2.5 rounded-full text-xs font-medium transition-all duration-200 ease-in-out">
                     {{ $counts->certificate ?? 0 }}
                 </span>
             </button>
             @if(auth()->user()->canEdit())
             <button wire:click="filterByType('memo')"
-                    class="@if($filterType === 'memo') border-pink-500 text-pink-600 @else border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 @endif whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-all duration-200 ease-in-out">
+                    class="@if($filterType === 'memo') border-pink-500 text-pink-600 @else border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 @endif flex-shrink-0 py-3 sm:py-4 px-1 border-b-2 font-medium text-xs sm:text-sm transition-all duration-200 ease-in-out inline-flex items-center whitespace-nowrap">
                 Memos
-                <span class="@if($filterType === 'memo') bg-pink-100 text-pink-600 @else bg-gray-100 text-gray-900 @endif ml-2 py-0.5 px-2.5 rounded-full text-xs font-medium transition-all duration-200 ease-in-out">
+                <span class="@if($filterType === 'memo') bg-pink-100 text-pink-600 @else bg-gray-100 text-gray-900 @endif ml-2 sm:ml-3 py-0.5 px-2 sm:px-2.5 rounded-full text-xs font-medium transition-all duration-200 ease-in-out">
                     {{ $counts->memo ?? 0 }}
                 </span>
             </button>
             <button wire:click="filterByType('report')"
-                    class="@if($filterType === 'report') border-teal-500 text-teal-600 @else border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 @endif whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-all duration-200 ease-in-out">
+                    class="@if($filterType === 'report') border-teal-500 text-teal-600 @else border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 @endif flex-shrink-0 py-3 sm:py-4 px-1 border-b-2 font-medium text-xs sm:text-sm transition-all duration-200 ease-in-out inline-flex items-center whitespace-nowrap">
                 Reports
-                <span class="@if($filterType === 'report') bg-teal-100 text-teal-600 @else bg-gray-100 text-gray-900 @endif ml-2 py-0.5 px-2.5 rounded-full text-xs font-medium transition-all duration-200 ease-in-out">
+                <span class="@if($filterType === 'report') bg-teal-100 text-teal-600 @else bg-gray-100 text-gray-900 @endif ml-2 sm:ml-3 py-0.5 px-2 sm:px-2.5 rounded-full text-xs font-medium transition-all duration-200 ease-in-out">
                     {{ $counts->report ?? 0 }}
                 </span>
             </button>
             <button wire:click="filterByType('contract')"
-                    class="@if($filterType === 'contract') border-orange-500 text-orange-600 @else border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 @endif whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-all duration-200 ease-in-out">
+                    class="@if($filterType === 'contract') border-orange-500 text-orange-600 @else border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 @endif flex-shrink-0 py-3 sm:py-4 px-1 border-b-2 font-medium text-xs sm:text-sm transition-all duration-200 ease-in-out inline-flex items-center whitespace-nowrap">
                 Contracts
-                <span class="@if($filterType === 'contract') bg-orange-100 text-orange-600 @else bg-gray-100 text-gray-900 @endif ml-2 py-0.5 px-2.5 rounded-full text-xs font-medium transition-all duration-200 ease-in-out">
+                <span class="@if($filterType === 'contract') bg-orange-100 text-orange-600 @else bg-gray-100 text-gray-900 @endif ml-2 sm:ml-3 py-0.5 px-2 sm:px-2.5 rounded-full text-xs font-medium transition-all duration-200 ease-in-out">
                     {{ $counts->contract ?? 0 }}
                 </span>
             </button>
             <button wire:click="filterByType('invoice')"
-                    class="@if($filterType === 'invoice') border-cyan-500 text-cyan-600 @else border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 @endif whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-all duration-200 ease-in-out">
+                    class="@if($filterType === 'invoice') border-cyan-500 text-cyan-600 @else border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 @endif flex-shrink-0 py-3 sm:py-4 px-1 border-b-2 font-medium text-xs sm:text-sm transition-all duration-200 ease-in-out inline-flex items-center whitespace-nowrap">
                 Invoices
-                <span class="@if($filterType === 'invoice') bg-cyan-100 text-cyan-600 @else bg-gray-100 text-gray-900 @endif ml-2 py-0.5 px-2.5 rounded-full text-xs font-medium transition-all duration-200 ease-in-out">
+                <span class="@if($filterType === 'invoice') bg-cyan-100 text-cyan-600 @else bg-gray-100 text-gray-900 @endif ml-2 sm:ml-3 py-0.5 px-2 sm:px-2.5 rounded-full text-xs font-medium transition-all duration-200 ease-in-out">
                     {{ $counts->invoice ?? 0 }}
                 </span>
             </button>
             @endif
             <button wire:click="filterByType('other')"
-                    class="@if($filterType === 'other') border-gray-500 text-gray-600 @else border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 @endif whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-all duration-200 ease-in-out">
+                    class="@if($filterType === 'other') border-gray-500 text-gray-600 @else border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 @endif flex-shrink-0 py-3 sm:py-4 px-1 border-b-2 font-medium text-xs sm:text-sm transition-all duration-200 ease-in-out inline-flex items-center whitespace-nowrap">
                 Other
-                <span class="@if($filterType === 'other') bg-gray-200 text-gray-600 @else bg-gray-100 text-gray-900 @endif ml-2 py-0.5 px-2.5 rounded-full text-xs font-medium transition-all duration-200 ease-in-out">
+                <span class="@if($filterType === 'other') bg-gray-200 text-gray-600 @else bg-gray-100 text-gray-900 @endif ml-2 sm:ml-3 py-0.5 px-2 sm:px-2.5 rounded-full text-xs font-medium transition-all duration-200 ease-in-out">
                     {{ $counts->other ?? 0 }}
                 </span>
             </button>
         </nav>
     </div>
 
+    <style>
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .scrollbar-hide {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+        /* Fade indicator on right side */
+        .scrollbar-hide::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 60px;
+            background: linear-gradient(to right, transparent, white);
+            pointer-events: none;
+        }
+    </style>
+
     <!-- Documents Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4" wire:loading.class="opacity-50">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4" wire:loading.class="opacity-50">
         @forelse ($documents as $document)
             <div wire:key="document-{{ $document->id }}" class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-200">
                 <!-- Document Preview -->
@@ -142,23 +164,23 @@
 
                     <!-- Actions -->
                     <div class="flex space-x-2">
-                        <a href="{{ Storage::url($document->file_path) }}" target="_blank" class="flex-1 text-center px-3 py-1 bg-blue-500 text-white text-xs font-semibold rounded-md hover:bg-blue-600 transition">
-                            <i class="fas fa-eye mr-1"></i>View
+                        <a href="{{ Storage::url($document->file_path) }}" target="_blank" class="flex-1 text-center px-2 sm:px-3 py-1.5 sm:py-1 bg-blue-500 text-white text-xs font-semibold rounded-md hover:bg-blue-600 transition active:scale-95">
+                            <i class="fas fa-eye mr-1"></i><span class="hidden sm:inline">View</span>
                         </a>
-                        <a href="{{ route('my-documents.download', $document->id) }}" class="flex-1 text-center px-3 py-1 bg-green-500 text-white text-xs font-semibold rounded-md hover:bg-green-600 transition">
-                            <i class="fas fa-download mr-1"></i>Download
+                        <a href="{{ route('my-documents.download', $document->id) }}" class="flex-1 text-center px-2 sm:px-3 py-1.5 sm:py-1 bg-green-500 text-white text-xs font-semibold rounded-md hover:bg-green-600 transition active:scale-95">
+                            <i class="fas fa-download mr-1"></i><span class="hidden sm:inline">Download</span>
                         </a>
-                        <button wire:click="confirmDelete({{ $document->id }})" class="px-3 py-1 bg-red-500 text-white text-xs font-semibold rounded-md hover:bg-red-600 transition">
+                        <button wire:click="confirmDelete({{ $document->id }})" class="px-2 sm:px-3 py-1.5 sm:py-1 bg-red-500 text-white text-xs font-semibold rounded-md hover:bg-red-600 transition active:scale-95">
                             <i class="fas fa-trash"></i>
                         </button>
                     </div>
                 </div>
             </div>
         @empty
-            <div class="col-span-full text-center py-12">
-                <i class="fas fa-folder-open text-gray-300 text-6xl mb-4"></i>
-                <p class="text-gray-500 text-lg">No documents found.</p>
-                <p class="text-gray-400 text-sm mt-2">Upload your first document to get started!</p>
+            <div class="col-span-full text-center py-8 sm:py-12 px-4">
+                <i class="fas fa-folder-open text-gray-300 text-5xl sm:text-6xl mb-3 sm:mb-4"></i>
+                <p class="text-gray-500 text-base sm:text-lg">No documents found.</p>
+                <p class="text-gray-400 text-xs sm:text-sm mt-2">Upload your first document to get started!</p>
             </div>
         @endforelse
     </div>

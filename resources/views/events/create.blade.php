@@ -50,18 +50,54 @@
                             </div>
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <label for="start_date" class="block text-sm font-medium text-gray-700">Start Date</label>
-                                    <input type="datetime-local" name="start_date" id="start_date" value="{{ old('start_date') }}"
-                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                                <!-- Start Date & Time -->
+                                <div class="space-y-4">
+                                    <div class="border-l-4 border-blue-500 pl-4">
+                                        <h4 class="text-sm font-semibold text-gray-900 mb-3">Start Date & Time</h4>
+                                        <div class="space-y-3">
+                                            <div>
+                                                <label for="start_date" class="block text-sm font-medium text-gray-700 mb-1">
+                                                    <i class="fas fa-calendar mr-1 text-blue-500"></i>Date
+                                                </label>
+                                                <input type="date" name="start_date" id="start_date" value="{{ old('start_date') }}"
+                                                    class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                                            </div>
+                                            <div>
+                                                <label for="start_time" class="block text-sm font-medium text-gray-700 mb-1">
+                                                    <i class="fas fa-clock mr-1 text-blue-500"></i>Time
+                                                </label>
+                                                <input type="time" name="start_time" id="start_time" value="{{ old('start_time') }}"
+                                                    class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                                            </div>
+                                        </div>
+                                    </div>
                                     @error('start_date') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                                    @error('start_time') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                                 </div>
 
-                                <div>
-                                    <label for="end_date" class="block text-sm font-medium text-gray-700">End Date</label>
-                                    <input type="datetime-local" name="end_date" id="end_date" value="{{ old('end_date') }}"
-                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                                <!-- End Date & Time -->
+                                <div class="space-y-4">
+                                    <div class="border-l-4 border-green-500 pl-4">
+                                        <h4 class="text-sm font-semibold text-gray-900 mb-3">End Date & Time</h4>
+                                        <div class="space-y-3">
+                                            <div>
+                                                <label for="end_date" class="block text-sm font-medium text-gray-700 mb-1">
+                                                    <i class="fas fa-calendar mr-1 text-green-500"></i>Date
+                                                </label>
+                                                <input type="date" name="end_date" id="end_date" value="{{ old('end_date') }}"
+                                                    class="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm">
+                                            </div>
+                                            <div>
+                                                <label for="end_time" class="block text-sm font-medium text-gray-700 mb-1">
+                                                    <i class="fas fa-clock mr-1 text-green-500"></i>Time
+                                                </label>
+                                                <input type="time" name="end_time" id="end_time" value="{{ old('end_time') }}"
+                                                    class="block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 sm:text-sm">
+                                            </div>
+                                        </div>
+                                    </div>
                                     @error('end_date') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                                    @error('end_time') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                                 </div>
                             </div>
 
