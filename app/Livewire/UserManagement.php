@@ -27,7 +27,9 @@ class UserManagement extends Component
 
     // Create/Edit User Form
     public $userId = null;
-    public $name = '';
+    public $first_name = '';
+    public $middle_name = '';
+    public $last_name = '';
     public $email = '';
     public $password = '';
     public $password_confirmation = '';
@@ -47,7 +49,9 @@ class UserManagement extends Component
     protected function rules()
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
+            'first_name' => ['required', 'string', 'max:255'],
+            'middle_name' => ['nullable', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $this->userId],
             'password' => $this->isEditing
                 ? ['nullable', 'string', Password::defaults(), 'confirmed']
@@ -98,7 +102,25 @@ class UserManagement extends Component
     {
         $this->isEditing = true;
         $this->userId = $user->id;
-        $this->name = $user->name;
+
+        // Parse the full name back into components
+        $nameParts = explode(' ', $user->name);
+        $this->first_name = $nameParts[0] ?? '';
+        $this->last_name = end($nameParts);
+
+        // Check for middle initial (ends with .)
+        if (count($nameParts) > 2) {
+            $middlePart = $nameParts[1];
+            if (substr($middlePart, -1) === '.') {
+                $this->middle_name = rtrim($middlePart, '.');
+            } else {
+                // If no period, it might be part of first name or a full middle name
+                $this->middle_name = $middlePart;
+            }
+        } else {
+            $this->middle_name = '';
+        }
+
         $this->email = $user->email;
         $this->selectedRole = $user->roles->first()->id ?? '';
         $this->showUserModal = true;
@@ -108,9 +130,46 @@ class UserManagement extends Component
     {
         $validatedData = $this->validate();
 
+        // Build full name
+        $fullName = $validatedData['first_name'];
+        if (!empty($validatedData['middle_name'])) {
+            $fullName .= ' ' . substr($validatedData['middle_name'], 0, 1) . '.';
+        }
+        $fullName .= ' ' . $validatedData['last_name'];
+
+        // Check if user with this exact name already exists
+        $existingUser = User::where('name', $fullName);
+        if ($this->isEditing) {
+            $existingUser = $existingUser->where('id', '!=', $this->userId);
+        }
+
+        if ($existingUser->exists()) {
+            $this->addError('first_name', 'A user with the name "' . $fullName . '" already exists in the system.');
+            return;
+        }
+
+        // Also check if a user with the same first and last name exists (regardless of middle name)
+        $firstName = $validatedData['first_name'];
+        $lastName = $validatedData['last_name'];
+
+        $similarUsers = User::where(function($query) use ($firstName, $lastName) {
+            $query->where('name', 'LIKE', $firstName . ' %' . $lastName)
+                  ->orWhere('name', $firstName . ' ' . $lastName);
+        });
+
+        if ($this->isEditing) {
+            $similarUsers = $similarUsers->where('id', '!=', $this->userId);
+        }
+
+        if ($similarUsers->exists()) {
+            $existingName = $similarUsers->first()->name;
+            $this->addError('first_name', 'A user with a similar name "' . $existingName . '" already exists. Please use a different first or last name.');
+            return;
+        }
+
         if ($this->isEditing) {
             $user = User::find($this->userId);
-            $user->name = $validatedData['name'];
+            $user->name = $fullName;
             $user->email = $validatedData['email'];
             if (!empty($validatedData['password'])) {
                 $user->password = Hash::make($validatedData['password']);
@@ -123,7 +182,7 @@ class UserManagement extends Component
             session()->flash('message', 'User updated successfully.');
         } else {
             $user = User::create([
-                'name' => $validatedData['name'],
+                'name' => $fullName,
                 'email' => $validatedData['email'],
                 'password' => Hash::make($validatedData['password']),
             ]);
@@ -175,7 +234,9 @@ class UserManagement extends Component
     public function resetForm()
     {
         $this->userId = null;
-        $this->name = '';
+        $this->first_name = '';
+        $this->middle_name = '';
+        $this->last_name = '';
         $this->email = '';
         $this->password = '';
         $this->password_confirmation = '';

@@ -36,8 +36,8 @@ body.dashboard-body {
 }
 
 .sidebar-header .logo-image {
-    width: 40px; /* Adjust based on your logo's dimensions */
-    height: 40px; /* Adjust based on your logo's dimensions */
+    width: 60px; /* Adjust based on your logo's dimensions */
+    height: 60px; /* Adjust based on your logo's dimensions */
     object-fit: contain;
     margin-right: 10px;
 }

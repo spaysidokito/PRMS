@@ -13,6 +13,12 @@
                 </div>
             @endif
 
+            @if (session()->has('error'))
+                <div class="mb-4 px-4 py-3 leading-normal text-red-700 bg-red-100 border border-red-400 rounded-lg" role="alert">
+                    <p class="font-semibold">{{ session('error') }}</p>
+                </div>
+            @endif
+
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                 <div class="p-6 space-y-6">
                     <div class="border-b pb-4">

@@ -7,6 +7,9 @@
 
         <title>{{ config('app.name', 'Laravel') }}</title>
 
+        <!-- Favicon -->
+        <link rel="icon" type="image/png" href="{{ asset('images/prms-logo.png') }}">
+
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
@@ -29,7 +32,7 @@
             <!-- Sidebar -->
             <aside class="dashboard-sidebar slide-in">
                 <div class="sidebar-header">
-                    <img src="{{ asset('images/logo.png') }}" alt="PRIMOSA Logo" class="logo-image" />
+                    <img src="{{ asset('images/prms-logo.png') }}" alt="PRIMOSA Logo" class="logo-image" />
                     <div class="app-name">PRIMOSA</div>
                 </div>
                 <nav class="sidebar-nav">

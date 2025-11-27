@@ -1049,3 +1049,79 @@ graph TB
 These diagrams provide a comprehensive visual representation of PRIMOSA's architecture, workflows, and deployment structure. They serve as essential documentation for developers, administrators, and stakeholders to understand how the system operates and how different components interact with each other.
 
 For technical implementation details, refer to the [TOOLS-AND-TECHNOLOGIES.md](TOOLS-AND-TECHNOLOGIES.md) document.
+
+
+---
+
+## Deployment Architecture Explanation
+
+### Figure: PRIMOSA Deployment Diagram
+
+The deployment diagram represents the hardware and software infrastructure required to host and access the PRIMOSA system. The architecture follows a client-server model with the following components:
+
+**Host Machine (Server Side)**
+
+The host machine serves as the central server infrastructure that runs the PRIMOSA application. It consists of two primary components working in tandem:
+
+1. **PRIMOSA System served through PHP** - The Laravel 11 application running on PHP 8.2+ serves as the core system, handling all business logic, user authentication, data processing, and request routing. The application is served through a web server (Apache or Nginx) that processes HTTP/HTTPS requests from client devices. The PHP runtime executes the Laravel framework code, processes Livewire components for dynamic interfaces, and generates HTML responses that are sent back to client browsers.
+
+2. **Database Management System (MySQL)** - MySQL 8.0+ serves as the relational database management system, storing all persistent data including user accounts with authentication credentials, student profiles with academic and personal information, event records with scheduling details, resource metadata and file paths, form submissions with approval statuses, and analytics logs tracking all system activities. The database communicates directly with the PHP application through secure database connections using Eloquent ORM for data operations.
+
+**Communication Protocol**
+
+The host machine and client devices communicate through HTTP/HTTPS protocols over the internet or local network. HTTPS is strongly recommended for production environments to ensure encrypted data transmission, protecting sensitive student information, user credentials, and institutional data during transit. The bidirectional arrows in the diagram indicate request-response cycles where clients send HTTP requests to the server (such as page loads, form submissions, or file downloads) and receive responses containing the requested data, rendered HTML pages, or confirmation of actions performed.
+
+**Client Device (User Side)**
+
+Client devices represent the end-user hardware used to access the PRIMOSA system. These can be desktop computers, laptops, tablets, or smartphones. The client side consists of two main components:
+
+1. **Browser** - Users access PRIMOSA through modern web browsers such as Google Chrome, Mozilla Firefox, Microsoft Edge, or Safari. The browser renders the HTML, CSS, and JavaScript delivered by the server, providing the user interface for interacting with the system. The browser handles form submissions, displays data tables and cards, manages user sessions through cookies, and executes client-side JavaScript for interactive features. No additional software installation is required on client devices, making the system easily accessible from any device with a web browser and internet connection.
+
+2. **Camera** - The camera component represents the device's built-in or external camera capability. This hardware feature is required for capturing and uploading profile pictures for student profiles and user accounts. The camera is accessed through the browser's media API (getUserMedia) when users choose to take photos directly within the application rather than uploading existing image files from their device storage. This feature enhances user experience by allowing immediate photo capture without requiring separate photo-taking applications or file transfers. The camera is optional for basic system operation but recommended for complete profile management functionality.
+
+**System Requirements**
+
+For optimal operation, the deployment requires:
+
+**Server Requirements:**
+- Operating System: Windows Server or Linux (Ubuntu/CentOS recommended)
+- Web Server: Apache 2.4+ or Nginx 1.18+
+- PHP Version: 8.2 or higher with required extensions (mbstring, openssl, pdo, tokenizer, xml, ctype, json, bcmath)
+- Database: MySQL 8.0+ or MariaDB 10.3+
+- Memory: Minimum 2GB RAM (4GB recommended for production)
+- Storage: Adequate disk space for database and uploaded files (minimum 20GB recommended)
+- Network: Stable internet connection with sufficient bandwidth for concurrent users
+
+**Client Requirements:**
+- Modern web browser with JavaScript enabled (Chrome 90+, Firefox 88+, Edge 90+, Safari 14+)
+- Internet connectivity (minimum 1 Mbps recommended)
+- Screen resolution: 320px minimum width for mobile, 768px+ for optimal desktop experience
+- Optional: Camera device for profile picture capture functionality
+
+**Network Requirements:**
+- HTTP/HTTPS connectivity between client and server
+- HTTPS strongly recommended for secure data transmission
+- SSL/TLS certificate for production deployment
+- Firewall configuration allowing ports 80 (HTTP) and 443 (HTTPS)
+
+**Security Considerations:**
+
+The deployment architecture incorporates multiple security layers:
+- All passwords are hashed using bcrypt before storage in the database
+- CSRF tokens protect against cross-site request forgery attacks
+- SQL injection prevention through parameterized queries
+- Role-based access control restricts features based on user permissions
+- Session management with secure, HTTP-only cookies
+- File upload validation restricts allowed file types and sizes
+- Audit logging tracks all user activities for accountability
+
+**Scalability and Performance:**
+
+The architecture supports scalability through:
+- Database indexing on frequently queried fields for faster data retrieval
+- Efficient query optimization using Eloquent ORM
+- Asset optimization through Vite build process (minification and bundling)
+- Responsive caching strategies for improved performance
+- Ability to scale horizontally by adding more server instances behind a load balancer
+
+This deployment architecture ensures PRIMOSA is accessible from any device with a web browser while maintaining centralized data management and security on the server side. The web-based approach eliminates the need for client-side software installation, reducing IT support requirements and ensuring all users access the same updated version of the system. The separation of concerns between client presentation and server processing provides a maintainable and scalable foundation for the student affairs management system.

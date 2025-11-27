@@ -66,37 +66,48 @@ class StudentProfileController extends Controller
             'department_cluster' => 'required|string|max:255',
         ]);
 
-        DB::transaction(function () use ($validatedData) {
-            // Create user account
-            $fullName = $validatedData['first_name'];
-            if (!empty($validatedData['middle_name'])) {
-                $fullName .= ' ' . substr($validatedData['middle_name'], 0, 1) . '.';
-            }
-            $fullName .= ' ' . $validatedData['last_name'];
+        try {
+            DB::transaction(function () use ($validatedData) {
+                // Create user account
+                $fullName = $validatedData['first_name'];
+                if (!empty($validatedData['middle_name'])) {
+                    $fullName .= ' ' . substr($validatedData['middle_name'], 0, 1) . '.';
+                }
+                $fullName .= ' ' . $validatedData['last_name'];
 
-            // Generate default password from student_id
-            $defaultPassword = 'Student@' . $validatedData['student_id'];
+                // Check if user with this name already exists
+                if (User::where('name', $fullName)->exists()) {
+                    throw new \Exception('A user with the name "' . $fullName . '" already exists in the system.');
+                }
 
-            $user = User::create([
-                'name' => $fullName,
-                'email' => $validatedData['email'],
-                'password' => Hash::make($defaultPassword),
-                'email_verified_at' => now(),
-            ]);
+                // Generate default password from student_id
+                $defaultPassword = 'Student@' . $validatedData['student_id'];
 
-            // Assign student role
-            $studentRole = Role::where('slug', 'student')->first();
-            if ($studentRole) {
-                $user->roles()->attach($studentRole);
-            }
+                $user = User::create([
+                    'name' => $fullName,
+                    'email' => $validatedData['email'],
+                    'password' => Hash::make($defaultPassword),
+                    'email_verified_at' => now(),
+                ]);
 
-            // Create student profile linked to user
-            $validatedData['user_id'] = $user->id;
-            StudentProfile::create($validatedData);
-        });
+                // Assign student role
+                $studentRole = Role::where('slug', 'student')->first();
+                if ($studentRole) {
+                    $user->roles()->attach($studentRole);
+                }
 
-        return redirect()->route('student-profiles.index')
-            ->with('message', 'Student profile and user account created successfully. Default password: Student@[StudentID]');
+                // Create student profile linked to user
+                $validatedData['user_id'] = $user->id;
+                StudentProfile::create($validatedData);
+            });
+
+            return redirect()->route('student-profiles.index')
+                ->with('message', 'Student profile and user account created successfully. Default password: Student@[StudentID]');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', $e->getMessage());
+        }
     }
 
 
@@ -150,26 +161,37 @@ class StudentProfileController extends Controller
             'department_cluster' => 'required|string|max:255',
         ]);
 
-        DB::transaction(function () use ($validatedData, $studentProfile) {
-            // Update student profile
-            $studentProfile->update($validatedData);
+        try {
+            DB::transaction(function () use ($validatedData, $studentProfile) {
+                // Update student profile
+                $studentProfile->update($validatedData);
 
-            // Update associated user if exists
-            if ($studentProfile->user) {
-                $fullName = $validatedData['first_name'];
-                if (!empty($validatedData['middle_name'])) {
-                    $fullName .= ' ' . substr($validatedData['middle_name'], 0, 1) . '.';
+                // Update associated user if exists
+                if ($studentProfile->user) {
+                    $fullName = $validatedData['first_name'];
+                    if (!empty($validatedData['middle_name'])) {
+                        $fullName .= ' ' . substr($validatedData['middle_name'], 0, 1) . '.';
+                    }
+                    $fullName .= ' ' . $validatedData['last_name'];
+
+                    // Check if another user with this name already exists (excluding current user)
+                    if (User::where('name', $fullName)->where('id', '!=', $studentProfile->user->id)->exists()) {
+                        throw new \Exception('A user with the name "' . $fullName . '" already exists in the system.');
+                    }
+
+                    $studentProfile->user->update([
+                        'name' => $fullName,
+                        'email' => $validatedData['email'],
+                    ]);
                 }
-                $fullName .= ' ' . $validatedData['last_name'];
+            });
 
-                $studentProfile->user->update([
-                    'name' => $fullName,
-                    'email' => $validatedData['email'],
-                ]);
-            }
-        });
-
-        return redirect()->route('student-profiles.index')->with('message', 'Student profile updated successfully.');
+            return redirect()->route('student-profiles.index')->with('message', 'Student profile updated successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', $e->getMessage());
+        }
     }
 
     /**

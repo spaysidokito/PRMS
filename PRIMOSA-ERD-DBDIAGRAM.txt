@@ -1,0 +1,177 @@
+// PRIMOSA Entity-Relationship Diagram
+// Copy and paste this entire code into https://dbdiagram.io/d
+// It will automatically generate a visual ERD
+
+Table users {
+  id bigint [pk, increment]
+  name varchar
+  email varchar [unique, not null]
+  email_verified_at timestamp
+  password varchar [not null]
+  current_team_id bigint
+  profile_photo_path varchar
+  is_active boolean [default: true]
+  remember_token varchar
+  created_at timestamp
+  updated_at timestamp
+
+  Note: 'Core user accounts for students, faculty, staff, and administrators'
+}
+
+Table roles {
+  id bigint [pk, increment]
+  name varchar [not null]
+  slug varchar [unique, not null]
+  created_at timestamp
+  updated_at timestamp
+
+  Note: 'User roles: student, faculty_staff, administrator'
+}
+
+Table role_user {
+  id bigint [pk, increment]
+  user_id bigint [not null]
+  role_id bigint [not null]
+  created_at timestamp
+  updated_at timestamp
+
+  Note: 'Junction table for many-to-many relationship between users and roles'
+}
+
+Table student_profiles {
+  id bigint [pk, increment]
+  user_id bigint [unique, not null]
+  student_id varchar [unique, not null]
+  first_name varchar [not null]
+  last_name varchar [not null]
+  middle_name varchar
+  birth_date date [not null]
+  gender varchar [not null]
+  address varchar [not null]
+  contact_number varchar [not null]
+  email varchar [unique, not null]
+  course varchar [not null]
+  year_level varchar [not null]
+  section varchar [not null]
+  status varchar [default: 'active']
+  emergency_contact text
+  medical_information text
+  department_cluster varchar [not null]
+  profile_picture varchar
+  created_at timestamp
+  updated_at timestamp
+
+  Note: 'Student profile information linked to user accounts'
+
+  Indexes {
+    student_id
+    department_cluster
+    course
+    year_level
+  }
+}
+
+Table events {
+  id bigint [pk, increment]
+  title varchar [not null]
+  description text [not null]
+  start_date datetime [not null]
+  end_date datetime [not null]
+  venue varchar [not null]
+  type varchar [not null]
+  status varchar [default: 'upcoming']
+  max_participants int
+  budget decimal(10,2)
+  created_by bigint [not null]
+  requirements json
+  attachments json
+  created_at timestamp
+  updated_at timestamp
+  deleted_at timestamp
+
+  Note: 'Institutional events managed by OSA (social, academic, training, workshop, seminar)'
+}
+
+Table resources {
+  id bigint [pk, increment]
+  title varchar [not null]
+  description text [not null]
+  type varchar [not null]
+  status varchar [default: 'available']
+  location varchar
+  quantity int [default: 1]
+  cost decimal(10,2)
+  purchase_date date
+  last_maintenance date
+  specifications json
+  attachments json
+  created_by bigint [not null]
+  created_at timestamp
+  updated_at timestamp
+  deleted_at timestamp
+
+  Note: 'Physical and digital resources (equipment, venue, documents)'
+}
+
+Table resource_forms {
+  id bigint [pk, increment]
+  category varchar [not null]
+  subcategory varchar
+  name varchar [not null]
+  template_filename varchar
+  display_order int [default: 0]
+  is_active boolean [default: true]
+  created_at timestamp
+  updated_at timestamp
+
+  Note: 'Form templates for SOA, GTC, and POD documents'
+}
+
+Table form_submissions {
+  id bigint [pk, increment]
+  user_id bigint [not null]
+  student_profile_id bigint
+  form_type varchar [not null]
+  file_path varchar [not null]
+  original_filename varchar [not null]
+  status varchar [default: 'pending']
+  notes text
+  admin_notes text
+  reviewed_by bigint
+  reviewed_at timestamp
+  created_at timestamp
+  updated_at timestamp
+
+  Note: 'Student form submissions with approval workflow'
+}
+
+Table resource_access_logs {
+  id bigint [pk, increment]
+  user_id bigint
+  form_type varchar [not null]
+  form_name varchar
+  action varchar [not null]
+  ip_address varchar(45)
+  user_agent text
+  file_path varchar
+  created_at timestamp
+  updated_at timestamp
+
+  Note: 'Analytics tracking for resource access (view, download, preview, upload)'
+
+  Indexes {
+    (form_type, action)
+    created_at
+  }
+}
+
+// Relationship definitions
+Ref: role_user.user_id > users.id [delete: cascade]
+Ref: role_user.role_id > roles.id [delete: cascade]
+Ref: student_profiles.user_id - users.id [delete: cascade]
+Ref: events.created_by > users.id
+Ref: resources.created_by > users.id
+Ref: form_submissions.user_id > users.id [delete: cascade]
+Ref: form_submissions.student_profile_id > student_profiles.id [delete: set null]
+Ref: form_submissions.reviewed_by > users.id [delete: set null]
+Ref: resource_access_logs.user_id > users.id [delete: set null]

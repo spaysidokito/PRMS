@@ -1,7 +1,7 @@
 <x-guest-layout>
     <div class="auth-container">
         <div class="auth-sidebar">
-            <img src="{{ asset('images/logo.png') }}" alt="PRIMOSA Logo" class="auth-logo" />
+            <img src="{{ asset('images/prms-logo.png') }}" alt="PRIMOSA Logo" class="auth-logo" />
             <h1>Welcome Back to PRIMOSA</h1>
             <p>Progressive Resource and Information Management System for the Office of Student Affairs</p>
         </div>

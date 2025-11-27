@@ -224,10 +224,24 @@
 
         <x-slot name="content">
             <div class="space-y-4">
-                <div>
-                    <x-label for="name" value="{{ __('Name') }}" />
-                    <x-input id="name" type="text" class="mt-1 block w-full" wire:model="name" />
-                    @error('name') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <x-label for="first_name" value="{{ __('First Name') }}" />
+                        <x-input id="first_name" type="text" class="mt-1 block w-full" wire:model="first_name" />
+                        @error('first_name') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                    </div>
+
+                    <div>
+                        <x-label for="middle_name" value="{{ __('Middle Name (Optional)') }}" />
+                        <x-input id="middle_name" type="text" class="mt-1 block w-full" wire:model="middle_name" placeholder="Optional" />
+                        @error('middle_name') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                    </div>
+
+                    <div>
+                        <x-label for="last_name" value="{{ __('Last Name') }}" />
+                        <x-input id="last_name" type="text" class="mt-1 block w-full" wire:model="last_name" />
+                        @error('last_name') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                    </div>
                 </div>
 
                 <div>
@@ -251,6 +265,9 @@
                     <x-label for="password" value="{{ __('Password') }}" />
                     <x-input id="password" type="password" class="mt-1 block w-full" wire:model="password" />
                     @error('password') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                    @if($isEditing)
+                        <p class="text-xs text-gray-500 mt-1">Leave blank to keep current password</p>
+                    @endif
                 </div>
 
                 <div>
